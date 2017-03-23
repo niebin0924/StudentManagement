@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1108" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="9Aj-bC-7uI" customClass="ZuoyeCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="150"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pic_headerpic" translatesAutoresizingMaskIntoConstraints="NO" id="Fke-SI-zIO">
+                    <rect key="frame" x="0.0" y="0.0" width="160" height="110"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ok4-yv-dPd">
+                    <rect key="frame" x="110" y="10" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="NsU-VD-7He"/>
+                        <constraint firstAttribute="width" constant="40" id="gia-Nd-42F"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="select_circle">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <state key="selected" backgroundImage="bg_checked">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B2r-we-KLp">
+                    <rect key="frame" x="0.0" y="120" width="160" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="zRH-xO-N88"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Fke-SI-zIO" firstAttribute="leading" secondItem="9Aj-bC-7uI" secondAttribute="leading" id="E5L-Hv-Ytr"/>
+                <constraint firstItem="Fke-SI-zIO" firstAttribute="top" secondItem="9Aj-bC-7uI" secondAttribute="top" id="Ors-1T-4rf"/>
+                <constraint firstAttribute="trailing" secondItem="B2r-we-KLp" secondAttribute="trailing" id="RRJ-Ri-QLh"/>
+                <constraint firstItem="ok4-yv-dPd" firstAttribute="top" secondItem="9Aj-bC-7uI" secondAttribute="top" constant="10" id="TLt-IA-IZe"/>
+                <constraint firstAttribute="trailing" secondItem="Fke-SI-zIO" secondAttribute="trailing" id="fgF-Za-uIg"/>
+                <constraint firstAttribute="bottom" secondItem="B2r-we-KLp" secondAttribute="bottom" constant="9" id="heq-C4-RO8"/>
+                <constraint firstItem="B2r-we-KLp" firstAttribute="top" secondItem="Fke-SI-zIO" secondAttribute="bottom" constant="10" id="lcR-so-Lm4"/>
+                <constraint firstItem="B2r-we-KLp" firstAttribute="leading" secondItem="9Aj-bC-7uI" secondAttribute="leading" id="rc8-Nj-geC"/>
+                <constraint firstAttribute="trailing" secondItem="ok4-yv-dPd" secondAttribute="trailing" constant="10" id="yFP-pV-bcJ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="nameLabel" destination="B2r-we-KLp" id="nb9-6B-lu5"/>
+                <outlet property="photoImageView" destination="Fke-SI-zIO" id="NgB-gj-RyS"/>
+                <outlet property="selectBtn" destination="ok4-yv-dPd" id="zWv-fD-3VE"/>
+            </connections>
+            <point key="canvasLocation" x="-125" y="-61"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg_checked" width="15" height="15"/>
+        <image name="pic_headerpic" width="48" height="48"/>
+        <image name="select_circle" width="15" height="15"/>
+    </resources>
+</document>
