@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+@class NBPhotoPickerGroup;
 
 @interface PhotoAssetViewController : UIViewController
+
+@property (nonatomic, strong) NBPhotoPickerGroup *assetsGroup;
+// 需要记录选中的值的数据
+@property (nonatomic, strong) NSArray *selectPickerAssets;
+
+@property (nonatomic, copy) void(^selectedAssetsBlock)(NSMutableArray *selectedAssets);
 
 @end

@@ -122,6 +122,7 @@ static NBAblumTool *sharePhotoTool = nil;
     
     [result enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PHAsset *asset = (PHAsset *)obj;
+        
         [assets addObject:asset];
     }];
     
@@ -160,5 +161,147 @@ static NBAblumTool *sharePhotoTool = nil;
         completion(image);
     }];
 }
+
+
+#pragma mark - ALAssetsLibrary
+// 遍历照片库
+- (NSArray<ALAssetsGroup*> *)enumerateAssetsGroup
+{
+    NSMutableArray<ALAssetsGroup *> *groups = [NSMutableArray array];
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    // 遍历相册
+    [library enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+        if (group) { // 遍历相册还未结束
+            // 设置过滤器
+            [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+            if (group.numberOfAssets) {
+                
+                
+                
+                [groups addObject:group];
+            }
+        } else { // 遍历结束（当group为空的时候就意味着结束）
+            if (groups.count) {
+                // 如果相册个数不为零，则可以在此处开始遍历相册了
+                //[self enumerateAssets];
+            } else {
+                NSLog(@"没有相册列表");
+            }
+        }
+    } failureBlock:^(NSError *error) {
+        NSLog(@"遍历失败");
+    }];
+    NSLog(@"groups=%@",groups);
+    return groups;
+}
+
+// 获取指定相册的所有照片
+- (NSArray<ALAsset *> *)enumerateAssetsInAssetsGroup:(ALAssetsGroup *)group
+{
+    NSMutableArray<ALAsset *> *assets = [NSMutableArray new];
+    [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        if (result) { // 遍历未结束
+            [assets addObject:result];
+        } else { // result 为nil，遍历结束
+            
+        }
+    }];
+    
+    return assets;
+}
+
+- (NSArray<ALAsset *> *)enumerateAssetsToIndex:(NSInteger)toIndex
+{
+    NSArray<ALAssetsGroup *> *groups = [self enumerateAssetsGroup];
+    NSMutableArray<ALAsset *> *assets = [NSMutableArray new];
+    for (ALAssetsGroup * group in groups) {
+        
+        /*
+         // 遍历所有的相片
+         [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+         if (result) { // 遍历未结束
+         [assets addObject:result];
+         } else { // result 为nil，遍历结束
+         
+         }
+         }];
+         */
+        
+        // 遍历指定的相片
+//        NSInteger fromIndex = 0; // 重指定的index开始遍历
+//        NSInteger toIndex =5; // 指定最后一张遍历的index
+        [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:toIndex] options:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+            if (index > toIndex) { // 已经遍历到指定的最后一张照片
+                *stop = YES; // 停止遍历
+            } else {
+                if (result) {
+                    // 存储相片
+                    [assets addObject:result];
+                } else { // 遍历结束
+                    // 展示图片
+                    //[self showPhotoWith:result];
+                }
+            }
+        }];
+    }
+    
+    return assets;
+}
+
+- (void)showPhotoWith:(ALAsset *)asset
+{
+    // 获取ALAsset对应的ALAssetRepresentation
+    ALAssetRepresentation * representation = [asset defaultRepresentation];
+    
+    NSLog(@"图片URL:%@", representation.url); // 图片URL
+    NSLog(@"图片尺寸:%@", NSStringFromCGSize(representation.dimensions)); // 图片尺寸
+    NSLog(@"数据字节:%lld", representation.size); // 数据字节
+    NSLog(@"统一类型标识符:%@", representation.UTI); // Uniform Type Identifier : 统一类型标识符（表示图片或视频的类型）
+    NSLog(@"文件名:%@", representation.filename); // 在相册中的文件名
+    NSLog(@"元数据:%@", representation.metadata); // 元数据（一些设备相关的信息，比如使用的相机）
+    NSLog(@"缩放比例:%lf", representation.scale); // 缩放比例
+    NSLog(@"方向:%ld", representation.orientation); // 方向
+    
+    /**
+     fullScreenImage : 返回当前设备尺寸大小的图片，编辑后的图片
+     fullResolutionImage ： 原图，没有编辑的图片
+     */
+    // 获取原图
+    UIImage *image = [UIImage imageWithCGImage:[representation fullScreenImage] scale:1.0 orientation:UIImageOrientationDownMirrored];
+    
+    if ([[UIDevice currentDevice].systemVersion doubleValue] >= 9.0 && [[UIDevice currentDevice].systemVersion doubleValue] <= 9.5) {
+        [asset aspectRatioThumbnail]; // 等比例缩略图 iOS9
+    }else {
+        [asset thumbnail];
+    }
+}
+
+- (void)getImage
+{
+    ALAssetsGroup *gg;
+    NSArray<ALAssetsGroup *> *groups = [self enumerateAssetsGroup];
+    for (ALAssetsGroup *group in groups) {
+        NSString *name = [group valueForProperty:@"ALAssetsGroupPropertyName"];
+        //查看相册存储的位置地址
+        NSLog(@"ALAssetsGroupPropertyURL:%@",[group valueForProperty:ALAssetsGroupPropertyURL]);
+        if ([name rangeOfString:@"相机"].location != NSNotFound) {
+            gg = group;
+        }
+    }
+    
+    NSMutableArray<ALAsset *> *assets = [self enumerateAssetsInAssetsGroup:gg];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+        });
+    });
+    
+    
+}
+
 
 @end

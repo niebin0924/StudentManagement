@@ -6,8 +6,25 @@
 //  Copyright © 2017年 Kitty. All rights reserved.
 //
 
+/*
+ PHAsset:一个资源，比如一张图片/一段视频
+ PHAssetCollection:一个相簿
+ PHImageManager:图片管理者，是单例，发送请求才能从asset获取图片
+ PHImageRequestOptions:图片请求选项
+ 
+ 
+ AssetsLibrary:iPhone中的资源库
+ AssetsGroup:一个相册
+ ALAsset:一个资源，比如一张图片/一段视频
+ ALAssetRepresentation:可以获取原图、全屏图。每个 ALAsset 都有至少有一个 ALAssetRepresentation 对象，可以通过 defaultRepresentation 获取
+ 
+ //关闭监听共享照片流产生的频繁通知信息
+ [ALAssetsLibrary disableSharedPhotoStreamsSupport];
+ */
+
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 //建一个内部类
 @interface NBAblumList : NSObject

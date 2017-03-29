@@ -63,8 +63,11 @@
         self.alertView.layer.position = self.center;
 
         [self.control addTarget:self action:@selector(remove) forControlEvents:UIControlEventTouchUpInside];
-//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(remove)];
-//        [self addGestureRecognizer:tap];
+
+        // pan
+//        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveAction:)];
+//        self.alertView.userInteractionEnabled = YES;
+//        [self.alertView addGestureRecognizer:pan];
         
         self.title = title;
         self.message = message;
@@ -351,6 +354,20 @@
         
     }];
     
+}
+
+#pragma mark - move
+- (void)moveAction:(UIPanGestureRecognizer *)pan
+{
+    CGPoint translation = [pan translationInView:self];
+    CGPoint newCenter = CGPointMake(pan.view.center.x+ translation.x,
+                                    pan.view.center.y + translation.y);// 限制屏幕范围
+    newCenter.y = MAX(pan.view.frame.size.height/2, newCenter.y);
+    newCenter.y = MIN(self.frame.size.height - pan.view.frame.size.height/2,  newCenter.y);
+    newCenter.x = MAX(pan.view.frame.size.width/2, newCenter.x);
+    newCenter.x = MIN(self.frame.size.width - pan.view.frame.size.width/2,newCenter.x);
+    pan.view.center = newCenter;
+    [pan setTranslation:CGPointZero inView:self];
 }
 
 #pragma mark - 回调 只设置2 -- > 确定才回调

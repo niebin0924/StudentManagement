@@ -8,7 +8,7 @@
 
 
 #import "HomeViewController.h"
-#import "PhotoAssetViewController.h"
+#import "PhotoGroupViewController.h"
 #import "SubjectFolderViewController.h"
 #import "PiZhuViewController.h"
 #import "ZuoyeViewController.h"
@@ -642,6 +642,9 @@
 // 上一张作业
 - (void)lastClick
 {
+    if (!self.defaultImgView.hidden) {
+        return;
+    }
     NSInteger index = -1;
     index = self.bgScrollView.contentOffset.x / self.bgScrollView.width;
     if (index > 0) {
@@ -658,6 +661,9 @@
 // 下一张作业
 - (void)nextClick
 {
+    if (!self.defaultImgView.hidden) {
+        return;
+    }
     NSInteger index = -1;
     index = self.bgScrollView.contentOffset.x / self.bgScrollView.width;
     if (!(index == self.openImageArray.count-1)) {
@@ -1357,7 +1363,7 @@
         }
 #endif
         
-        PhotoAssetViewController *vc = [[PhotoAssetViewController alloc] init];
+        PhotoGroupViewController *vc = [[PhotoGroupViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
         
         

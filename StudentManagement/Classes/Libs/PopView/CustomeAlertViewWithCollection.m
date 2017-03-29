@@ -80,7 +80,7 @@
         layout.itemSize = CGSizeMake(itemWidth, itemHeight);
         layout.minimumLineSpacing = Space; // 行间距
         layout.minimumInteritemSpacing = Space; // 垂直间距
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(Space, CGRectGetMaxY(self.titleLbl.frame)+Space, AlertW-2*Space, AlertH-5*Space-50-1) collectionViewLayout:layout];
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(Space, CGRectGetMaxY(self.titleLbl.frame)+Space, AlertW-2*Space, AlertH-CGRectGetMaxY(self.titleLbl.frame)-50-1) collectionViewLayout:layout];
         self.collectionView.backgroundColor = [UIColor whiteColor];
         [self.collectionView registerNib:[UINib nibWithNibName:cellName bundle:nil] forCellWithReuseIdentifier:@"Cell"];
         self.collectionView.dataSource = self;
