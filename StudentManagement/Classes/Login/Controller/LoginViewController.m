@@ -281,26 +281,28 @@
             SubjectInfo *subject = [[SubjectInfo alloc] init];
             subject.subjectId = [NSString stringWithFormat:@"%@",[result objectForKey:@"subject_id"]];
             subject.subjectName = [NSString stringWithFormat:@"%@",[result objectForKey:@"subject_name"]];
-            
-            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:subject];
-            // 存储
-            [dataArray addObject:data];
+
+            [dataArray addObject:subject];
         }
         
     }
     
-    // NSUserDefaults 存储的对象全是不可变的
-    NSArray *array = [NSArray arrayWithArray:dataArray];
-    [[AppDefaultUtil sharedInstance] setSubjects:array];
+    // 归档
+    [NSKeyedArchiver archiveRootObject:dataArray toFile:SubjectFileName];
+    
+    
+//    // NSUserDefaults 存储的对象全是不可变的
+//    NSArray *array = [NSArray arrayWithArray:dataArray];
+//    [[AppDefaultUtil sharedInstance] setSubjects:array];
+    
     
     /*
-     // 取出
-     NSArray *arr = [[AppDefaultUtil sharedInstance] getSubjects];
-     for (NSData *data in arr) {
-     SubjectInfo *b = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-     DLog(@"baby:subjectId=%@ name=%@",b.subjectId,b.subjectName);
-     }
-     */
+    // 解档
+    NSArray *arr = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
+    for (SubjectInfo *b in arr) {
+        DLog(@"baby:subjectId=%@ name=%@",b.subjectId,b.subjectName);
+    }
+    */
 }
 
 - (void)didReceiveMemoryWarning {

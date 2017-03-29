@@ -53,7 +53,7 @@
 - (void)setGradeName:(NSString *)gradeName;
 - (NSString *)getGradeName;
 
-- (void)setSubjects:(NSArray *)subjects;
-- (NSArray *)getSubjects;
+//- (void)setSubjects:(NSArray *)subjects;
+//- (NSArray *)getSubjects;
 
 @end

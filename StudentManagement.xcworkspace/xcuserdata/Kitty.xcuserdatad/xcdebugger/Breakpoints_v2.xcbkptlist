@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512290100.101619"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1089"
-            endingLineNumber = "1089"
+            startingLineNumber = "1185"
+            endingLineNumber = "1185"
             landmarkName = "-deleteRequest"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512290100.101619"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1135"
-            endingLineNumber = "1135"
+            startingLineNumber = "1231"
+            endingLineNumber = "1231"
             landmarkName = "-runDispatch"
             landmarkType = "7">
          </BreakpointContent>
@@ -164,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512290100.101619"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1047"
-            endingLineNumber = "1047"
+            startingLineNumber = "1148"
+            endingLineNumber = "1148"
             landmarkName = "-uploadToServer:"
             landmarkType = "7">
          </BreakpointContent>
@@ -180,11 +180,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512290100.101619"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1232"
-            endingLineNumber = "1232"
+            startingLineNumber = "1328"
+            endingLineNumber = "1328"
             landmarkName = "-images"
             landmarkType = "7">
          </BreakpointContent>
@@ -228,11 +228,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/PhotoAssetViewController.m"
-            timestampString = "512387656.818964"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
             landmarkName = "-setSelectPickerAssets:"
             landmarkType = "7">
          </BreakpointContent>
@@ -244,11 +244,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/PhotoAssetViewController.m"
-            timestampString = "512459093.002299"
+            timestampString = "512467255.993816"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "-sureClick"
             landmarkType = "7">
          </BreakpointContent>

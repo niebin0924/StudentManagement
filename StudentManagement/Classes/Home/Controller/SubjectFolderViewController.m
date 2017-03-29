@@ -58,13 +58,7 @@
 
 - (void)initData
 {
-    self.dataArray = [NSMutableArray array];
-    
-    NSArray *arr = [[AppDefaultUtil sharedInstance] getSubjects];
-    for (NSData *data in arr) {
-        SubjectInfo *subject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        [self.dataArray addObject:subject];
-    }
+    self.dataArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
 }
 
 - (void)initCollectionView

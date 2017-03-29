@@ -39,13 +39,13 @@
 - (void)initData
 {
     self.cellDict = [NSMutableDictionary dictionary];
-    self.dataArray = [NSMutableArray array];
+    self.dataArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
     
-    NSArray *arr = [[AppDefaultUtil sharedInstance] getSubjects];
-    for (NSData *data in arr) {
-        SubjectInfo *subject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        [self.dataArray addObject:subject];
-    }
+//    NSArray *arr = [[AppDefaultUtil sharedInstance] getSubjects];
+//    for (NSData *data in arr) {
+//        SubjectInfo *subject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+//        [self.dataArray addObject:subject];
+//    }
 }
 
 - (void)initCollectionView

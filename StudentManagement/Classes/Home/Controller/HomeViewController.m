@@ -1031,13 +1031,8 @@
 // 先上传图片
 - (void)uploadImage
 {
-    self.subjectsArray = [NSMutableArray array];
-    NSArray *arr = [[AppDefaultUtil sharedInstance] getSubjects];
-    for (NSData *data in arr) {
-        SubjectInfo *subject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        [self.subjectsArray addObject:subject];
-    }
-    
+    self.subjectsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
+   
     CustomeAlertViewWithCollection *alertView = [[CustomeAlertViewWithCollection alloc] initWithTitle:@"上传" collectionCellName:@"FolderCollectionViewCell" sureBtn:@"确定" cancleBtn:@"取消"];
     alertView.datasource = self;
     alertView.delegate = self;

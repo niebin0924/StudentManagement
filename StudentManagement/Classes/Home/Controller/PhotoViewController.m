@@ -106,7 +106,7 @@
             
             Homework *modal = [[Homework alloc] init];
             modal.img = result;
-            modal.imageName = @"";
+            modal.imageUrlStr = @"";
             modal.isSel = NO;
             modal.homeworkId = @"";
             modal.homeworkName = [asset valueForKey:@"filename"];
