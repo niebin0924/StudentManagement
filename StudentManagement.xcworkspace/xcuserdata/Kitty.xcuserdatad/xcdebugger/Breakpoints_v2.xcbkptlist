@@ -127,7 +127,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1089"
             endingLineNumber = "1089"
-            landmarkName = "-delete"
+            landmarkName = "-deleteRequest"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,6 +234,22 @@
             startingLineNumber = "105"
             endingLineNumber = "105"
             landmarkName = "-setSelectPickerAssets:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StudentManagement/Classes/Home/Controller/PhotoAssetViewController.m"
+            timestampString = "512459093.002299"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "-sureClick"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

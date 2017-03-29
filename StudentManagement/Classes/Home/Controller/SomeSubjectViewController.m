@@ -130,7 +130,7 @@
         modal.homeworkId = [NSString stringWithFormat:@"%@",[result objectForKey:@"homework_id"]];
         modal.teacherId = [NSString stringWithFormat:@"%@",[result objectForKey:@"teacher_id"]];
         modal.homeworkName = [NSString stringWithFormat:@"%@",[result objectForKey:@"homework_name"]];
-        modal.imageName = [NSString stringWithFormat:@"%@",[result objectForKey:@"homework_img"]];
+        modal.imageUrlStr = [NSString stringWithFormat:@"%@",[result objectForKey:@"homework_img"]];
         modal.isDel = [[NSString stringWithFormat:@"%@",[result objectForKey:@"is_del"]] boolValue];
         modal.isMark = [NSString stringWithFormat:@"%@",[result objectForKey:@"is_pizhu"]];
         NSString *time = [NSString stringWithFormat:@"%@",[result objectForKey:@"addtime"]];
@@ -222,10 +222,10 @@
     cell.selectBtn.tag = 10 + indexPath.item;
     
     Homework *modal = self.dataArray[indexPath.item];
-    if ([modal.imageName rangeOfString:@"http"].location != NSNotFound) {
-        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:modal.imageName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+    if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
+        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
     }else{
-        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageName]]];
+        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageUrlStr]]];
     }
     cell.nameLabel.text = modal.homeworkName;
     cell.selectBtn.selected = NO;

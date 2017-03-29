@@ -14,7 +14,7 @@
 // 当这个参数用于上传作业时,homeworkId=0表示上传 homeworkId!=0表示更新
 @property (nonatomic,copy) NSString *homeworkId;
 @property (nonatomic,copy) NSString *homeworkName;
-@property (nonatomic,copy) NSString *imageName;
+@property (nonatomic,copy) NSString *imageUrlStr;
 @property (nonatomic,copy) UIImage  *img;
 @property (nonatomic,copy) NSString *addTime;
 @property (nonatomic,copy) NSArray *pizhuArray;

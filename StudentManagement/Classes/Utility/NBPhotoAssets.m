@@ -52,4 +52,8 @@
     return [[self.asset defaultRepresentation] url];
 }
 
+- (NSString *)fileName{
+    return [[self.asset defaultRepresentation] filename];
+}
+
 @end

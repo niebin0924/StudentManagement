@@ -27,7 +27,7 @@
 #import "KNPhotoBrower.h"
 
 
-@interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,AlertViewDataSource,AlertViewDelegate,CustomePopViewDelegate,KNPhotoBrowerDelegate>
+@interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,KNPhotoBrowerDelegate>
 {
     NSInteger _currPage;
     NSString *_subjectId;
@@ -209,40 +209,6 @@
     }
 }
 
-// 拍照获取照片
-- (void)cameraWithImage:(UIImage *)image
-{
-    self.defaultImgView.hidden = YES;
-    self.tipLabel.hidden = YES;
-    if (self.openImageArray && self.openImageArray.count > 0) {
-        // 先清空工作区的ImgView
-        for (NSInteger i=0; i<self.openImageArray.count; i++) {
-            UIImageView *imgView = [self.bgScrollView viewWithTag:10+i];
-            [imgView removeFromSuperview];
-        }
-    }
-    
-    NSMutableArray *result = [NSMutableArray array];
-    Homework *model = [[Homework alloc] init];
-    model.img = image;
-    model.imageName = @"";
-    model.isSel = NO;
-    model.homeworkId = @"";
-    [result addObject:model];
-    
-    self.openImageArray = result;
-    // 初始化批注个数
-    if (self.pizhuCountArray && self.pizhuCountArray.count > 0) {
-        [self.pizhuCountArray removeAllObjects];
-    }
-    [self.pizhuCountArray addObject:@1];
-    // 初始化pathArray
-    [self.pathArray addObject:[NSNull null]];
-    // 初始化展示给用户的首页图片
-    _openedIndex = 0;
-    [self addImgViewInBgScrollView];
-}
-
 - (void)addImgViewInBgScrollView
 {
     self.bgScrollView.contentSize = CGSizeMake(self.bgScrollView.width*self.openImageArray.count, self.bgScrollView.height);
@@ -267,29 +233,25 @@
         if ([object isKindOfClass:[Homework class]]) {
             // 打开
             Homework *modal = object;
-            if ([modal.imageName isEqualToString:@""]) {
-                // 从相册读取
-                imgView.image = modal.img;
+            if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
+                
+                [imgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+                modal.img = imgView.image;
                 
                 
             }else {
-                if ([modal.imageName rangeOfString:@"http"].location != NSNotFound) {
-                    
-                    [imgView sd_setImageWithURL:[NSURL URLWithString:modal.imageName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
-                    
-                }else{
-                    [imgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageName]]];
-                    
-                }
-                modal.img = imgView.image;
+                
+                // 从相册读取
+                imgView.image = modal.img;
+                
             }
             
             if (i == _openedIndex) {
                 
-                if ([modal.imageName isEqualToString:@""]) {
+                if ([modal.imageUrlStr isEqualToString:@""]) {
                     self.openedImgView = imgView;
                 }else {
-                    [self.openedImgView sd_setImageWithURL:[NSURL URLWithString:modal.imageName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+                    [self.openedImgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
                 }
             }
             
@@ -389,6 +351,104 @@
         self.openedImgView = imgView2;//展示下一张图片
         
     }
+}
+
+- (void)addBottomPizhuViewWithHomework:(Homework *)model
+{
+    NSInteger count = 0;
+    NSArray *pizhu = model.pizhuArray;
+    if (pizhu && pizhu.count > 0) {
+        count = pizhu.count;
+    }
+    
+    // 先删除label
+    NSArray *arr = _pizhuScrollView.subviews;
+    for (id object in arr) {
+        if ([object isKindOfClass:[UILabel class]]) {
+            UILabel *label = (UILabel *)object;
+            [label removeFromSuperview];
+        }
+    }
+    
+    for (NSInteger i=0; i<count; i++) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10 + i*70, 0, 60, 30)];
+        label.tag = 200 + i;
+        label.text = [NSString stringWithFormat:@"批注%zd",i+1];
+        label.textColor = [UIColor redColor];
+        label.font = [UIFont systemFontOfSize:20];
+        [_pizhuScrollView addSubview:label];
+        
+        // 点击label 弹出批注详情
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popPizhuDetail:)];
+        label.userInteractionEnabled = YES;
+        [label addGestureRecognizer:tap];
+    }
+    _pizhuScrollView.contentSize = CGSizeMake(10*(count+1) + 60*count, _pizhuScrollView.height);
+    _pizhu.text = [NSString stringWithFormat:@"批注（共%ld条）: ",count];
+}
+
+- (void)popPizhuDetail:(UITapGestureRecognizer *)tap
+{
+    UILabel *label = (UILabel *)tap.view;
+    NSInteger index = label.tag - 200;
+    Homework *model = self.openImageArray[_openedIndex];
+    NSArray *pizhu = model.pizhuArray;
+    Mark *mark = pizhu[index];
+    _pizhuIndex = index;
+    CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"批注" message:mark.content sureBtn:@"关闭" cancleBtn:nil];
+    alertView.delegate = self;
+    alertView.resultIndex = ^(NSInteger index)
+    {
+        // 回调 -- 处理
+        //        NSLog(@"%s",__func__);
+        [self clearCache];
+    };
+    
+    alertView.dataArray = mark.content_img;
+    [alertView addCollectionViewWithConfigurationHandler:^(UICollectionView *collectionView) {
+        
+    }];
+    [alertView showPopView];
+}
+
+// CustomePopViewDelegate
+- (void)popViewWithCollectionView:(UICollectionView *)collectionView index:(NSInteger)currentIndex
+{
+    if (self.itemsArr && self.itemsArr.count > 0) {
+        [self.itemsArr removeAllObjects];
+    }
+    Homework *model = self.openImageArray[_openedIndex];
+    NSArray *pizhu = model.pizhuArray;
+    Mark *mark = pizhu[_pizhuIndex];
+    for (NSString *urlStr in mark.content_img) {
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[mark.content_img indexOfObject:urlStr] inSection:0];
+        PopImageCollectionViewCell *cell = (PopImageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        
+        KNPhotoItems *items = [[KNPhotoItems alloc] init];
+        items.url = urlStr;
+        items.sourceView = cell.iconImageView;
+        [self.itemsArr addObject:items];
+    }
+    
+    KNPhotoBrower *photoBrower = [[KNPhotoBrower alloc] init];
+    [photoBrower setDelegate:self];
+    [photoBrower setItemsArr:[self.itemsArr copy]];
+    [photoBrower setCurrentIndex:currentIndex];
+    
+    /****************  为了 循环利用 而做出的 新的属性  *****************/
+    //    [photoBrower setDataSourceUrlArr:[self.itemsArr copy]];
+    //    [photoBrower setSourceViewForCellReusable:collectionView];
+    /****************  为了 循环利用 而做出的 新的属性  *****************/
+    
+    
+    [photoBrower present];
+}
+
+// KNPhotoBrowerDelegate
+- (void)photoBrowerWillDismiss
+{
+    [[SDImageCache sharedImageCache] clearDisk];
 }
 
 #pragma mark - initView
@@ -542,102 +602,6 @@
     
 }
 
-- (void)addBottomPizhuViewWithHomework:(Homework *)model
-{
-    NSInteger count = 0;
-    NSArray *pizhu = model.pizhuArray;
-    if (pizhu && pizhu.count > 0) {
-        count = pizhu.count;
-    }
-    
-    // 先删除label
-    NSArray *arr = _pizhuScrollView.subviews;
-    for (id object in arr) {
-        if ([object isKindOfClass:[UILabel class]]) {
-            UILabel *label = (UILabel *)object;
-            [label removeFromSuperview];
-        }
-    }
-    
-    for (NSInteger i=0; i<count; i++) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10 + i*70, 0, 60, 30)];
-        label.tag = 200 + i;
-        label.text = [NSString stringWithFormat:@"批注%zd",i+1];
-        label.textColor = [UIColor redColor];
-        label.font = [UIFont systemFontOfSize:20];
-        [_pizhuScrollView addSubview:label];
-        
-        // 点击label 弹出批注详情
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popPizhuDetail:)];
-        label.userInteractionEnabled = YES;
-        [label addGestureRecognizer:tap];
-    }
-    _pizhuScrollView.contentSize = CGSizeMake(10*(count+1) + 60*count, _pizhuScrollView.height);
-    _pizhu.text = [NSString stringWithFormat:@"批注（共%ld条）: ",count];
-}
-
-- (void)popPizhuDetail:(UITapGestureRecognizer *)tap
-{
-    UILabel *label = (UILabel *)tap.view;
-    NSInteger index = label.tag - 200;
-    Homework *model = self.openImageArray[_openedIndex];
-    NSArray *pizhu = model.pizhuArray;
-    Mark *mark = pizhu[index];
-    _pizhuIndex = index;
-    CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"批注" message:mark.content sureBtn:@"关闭" cancleBtn:nil];
-    alertView.delegate = self;
-    alertView.resultIndex = ^(NSInteger index)
-    {
-        // 回调 -- 处理
-//        NSLog(@"%s",__func__);
-        [self clearCache];
-    };
-    
-    alertView.dataArray = mark.content_img;
-    [alertView addCollectionViewWithConfigurationHandler:^(UICollectionView *collectionView) {
-        
-    }];
-    [alertView showPopView];
-}
-
-// CustomePopViewDelegate
-- (void)popViewWithCollectionView:(UICollectionView *)collectionView index:(NSInteger)currentIndex
-{
-    if (self.itemsArr && self.itemsArr.count > 0) {
-        [self.itemsArr removeAllObjects];
-    }
-    Homework *model = self.openImageArray[_openedIndex];
-    NSArray *pizhu = model.pizhuArray;
-    Mark *mark = pizhu[_pizhuIndex];
-    for (NSString *urlStr in mark.content_img) {
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[mark.content_img indexOfObject:urlStr] inSection:0];
-        PopImageCollectionViewCell *cell = (PopImageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-        
-        KNPhotoItems *items = [[KNPhotoItems alloc] init];
-        items.url = urlStr;
-        items.sourceView = cell.iconImageView;
-        [self.itemsArr addObject:items];
-    }
- 
-    KNPhotoBrower *photoBrower = [[KNPhotoBrower alloc] init];
-    [photoBrower setDelegate:self];
-    [photoBrower setItemsArr:[self.itemsArr copy]];
-    [photoBrower setCurrentIndex:currentIndex];
-    
-    /****************  为了 循环利用 而做出的 新的属性  *****************/
-//    [photoBrower setDataSourceUrlArr:[self.itemsArr copy]];
-//    [photoBrower setSourceViewForCellReusable:collectionView];
-    /****************  为了 循环利用 而做出的 新的属性  *****************/
-    
-    
-    [photoBrower present];
-}
-
-- (void)photoBrowerWillDismiss
-{
-    [[SDImageCache sharedImageCache] clearDisk];
-}
 
 // 上一张作业
 - (void)lastClick
@@ -687,127 +651,33 @@
     
 }
 
-- (void)openHomework
-{
-    if (self.state == 0) {
-        [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
-        return;
-    }
-    [self openSubjects];
-}
-
-- (void)saveImageToiPhone
-{
-    UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
-}
-
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
-    
-    if (error == nil) {
-        
-        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出" message:@"文件已导出成功" sureBtn:@"确定" cancleBtn:nil];
-        [alertView showPopView];
-        
-    }else{
-        
-        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出" message:@"文件导出失败" sureBtn:@"确定" cancleBtn:nil];
-        [alertView showPopView];
-    }
-    
-}
-
+#pragma mark - 功能选择
 - (void)changeValue:(ImageTextButton *)btn
 {
     switch (btn.tag) {
         case 10: // 导入
         {
-            UIActionSheet *sheeet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"选择相册",@"拍照", nil];
-            [sheeet showInView:self.view];
+            [self import];
         }
             break;
         case 11: // 裁切
         {
-            // 如果图片有了批注,就不能进行裁切
-            if (self.openedImgView!=nil) {
-                Homework *model = self.openImageArray[_openedIndex];
-                NSArray *pizhu = model.pizhuArray;
-                if (!(pizhu && pizhu.count > 0)) {
-                    
-                    HXCutPictureViewController *vc = [[HXCutPictureViewController alloc] initWithCropImage:self.openedImgView.image  cropSize:self.openedImgView.frame.size title:@"裁剪" isLast:YES];
-                    vc.completion = ^(HXCutPictureViewController *vc, UIImage *finishImage) {
-                        self.openedImgView.image = finishImage;
-                    };
-                    [self.navigationController pushViewController:vc animated:YES];
-                    
-                }
-                
-            }
+            [self capture];
         }
             break;
         case 12: // 批注
         {
-            // 如果有了批注序号,才能进入批注详情
-            if (self.pizhuCountArray && self.pizhuCountArray.count <= 0) {
-                return;
-            }
-            UIImageView *imgView = [self.bgScrollView viewWithTag:10+_openedIndex];
-            NSMutableArray *copyArray = [self.pizhuCountArray mutableCopy];
-            __block NSNumber *numberCount = [copyArray objectAtIndex:_openedIndex];
-            
-            UIButton *pizhuBtn = [imgView viewWithTag:100+[numberCount integerValue]];
-            if (pizhuBtn != nil) {
-                typeof(self) __weak weakSelf = self;
-                PiZhuViewController *vc = [[PiZhuViewController alloc] init];
-                vc.pathBlock = ^ (NSString *paths, NSString *text){
-                    
-//                    [weakSelf.pathArray addObject:[NSMutableArray arrayWithArray:paths]];
-                    [weakSelf.pathArray replaceObjectAtIndex:_openedIndex withObject:[NSMutableArray arrayWithObject:paths]];
-                    NSMutableArray *arr = [self.pizhuArray mutableCopy];
-                    Mark *model = arr[[numberCount integerValue]-1];
-                    model.content = text;
-                    
-                    // 第一个批注完成，进入下一个批注
-                    NSInteger count = [numberCount integerValue];
-                    count ++;
-                    numberCount = [NSNumber numberWithInteger:count];
-                    [copyArray replaceObjectAtIndex:_openedIndex withObject:numberCount];
-                    self.pizhuCountArray = copyArray;
-                };
-                [self.navigationController pushViewController:vc animated:YES];
-            }
+            [self postil];
             
         }
             break;
         case 13: // 打开
-            if (self.state == 0) {
-                [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
-                return;
-            }
-            [self openSubjects];
+            
+            [self openHomework];
             break;
         case 14: // 删除
         {
-            if (self.state == 0) {
-                [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
-                return;
-            }
-            
-            // 如果当前工作区有图片才能删除
-            if (self.openedImgView != nil) {
-                Homework *modal = self.openImageArray[_openedIndex];
-                if ([modal.homeworkId isEqualToString:@""]) {
-                    return;
-                }
-                CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"删除" message:@"确定要删除该图片及其批注?" sureBtn:@"删除" cancleBtn:@"取消"];
-                alertView.resultIndex = ^(NSInteger index)
-                {
-                    // 回调 -- 处理
-                    //        NSLog(@"%s",__func__);
-                    [self delete];
-                };
-                [alertView showPopView];
-                
-            }
+            [self delete];
         }
             break;
         case 15:
@@ -831,24 +701,260 @@
             break;
         case 18: // 导出
         {
-            // 如果工作区有图片,导出到相册
-            if (self.openedImgView != nil) {
-                [self saveImageToiPhone];
-            }
+            
+            [self saveImageToiPhone];
+            
         }
             break;
         case 19: // 上传
-            if (self.state == 0) {
-                [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
-                return;
-            }
-            if (self.openedImgView != nil) {
-                [self uploadImage];
-            }
+            
+            [self upload];
             
             break;
         default:
             break;
+    }
+}
+
+#pragma mark - 导入
+- (void)import
+{
+    UIActionSheet *sheeet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"选择相册",@"拍照", nil];
+    [sheeet showInView:self.view];
+}
+
+#pragma mark UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        BOOL isCamera = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
+        if (!isCamera) {
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"没有摄像头" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [alertView show];
+            return ;
+        }
+        //从摄像头获取活动图片
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.allowsEditing = YES;
+        [self presentViewController:imagePicker animated:YES completion:^{}];
+        
+        
+    }else if (buttonIndex == 0) {
+#if 0
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        UIPopoverController *popVC = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+        popVC.popoverContentSize = CGSizeMake(SCREENWIDTH*0.5, 180);
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.delegate = self;
+        imagePicker.allowsEditing = YES;
+        imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
+        [imagePicker shouldAutorotate];
+        [[AppDefaultUtil sharedInstance] setPhotoLibary:YES];
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            [popVC presentPopoverFromRect:CGRectMake(SCREENWIDTH*0.5-120*0.5,30,120,120) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+            
+        }else{
+            [self presentViewController:imagePicker animated:YES completion:^{}];
+        }
+#endif
+        
+        PhotoGroupViewController *vc = [[PhotoGroupViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+        
+        
+    }
+}
+
+#pragma mark UIImagePickerControllerDelegate
+// 完成拍照后的回调方法
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+    NSString *mediaType=[info objectForKey:UIImagePickerControllerMediaType];
+    // 如果是拍照
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        UIImage *image;
+        // 如果允许编辑则获得编辑后的照片，否则获取原始照片
+        if (picker.allowsEditing) {
+            // 获取编辑后的照片
+            image = [info objectForKey:UIImagePickerControllerEditedImage];
+        }
+        else{
+            // 获取原始照片
+            image = [info objectForKey:UIImagePickerControllerOriginalImage];
+        }
+        
+        
+        [self cameraWithImage:image];
+        
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+// 拍照获取照片
+- (void)cameraWithImage:(UIImage *)image
+{
+    self.defaultImgView.hidden = YES;
+    self.tipLabel.hidden = YES;
+    if (self.openImageArray && self.openImageArray.count > 0) {
+        // 先清空工作区的ImgView
+        for (NSInteger i=0; i<self.openImageArray.count; i++) {
+            UIImageView *imgView = [self.bgScrollView viewWithTag:10+i];
+            [imgView removeFromSuperview];
+        }
+    }
+    
+    NSMutableArray *result = [NSMutableArray array];
+    Homework *model = [[Homework alloc] init];
+    model.img = image;
+    model.imageUrlStr = @"";
+    model.isSel = NO;
+    model.homeworkId = @"";
+    [result addObject:model];
+    
+    self.openImageArray = result;
+    // 初始化批注个数
+    if (self.pizhuCountArray && self.pizhuCountArray.count > 0) {
+        [self.pizhuCountArray removeAllObjects];
+    }
+    [self.pizhuCountArray addObject:@1];
+    // 初始化pathArray
+    [self.pathArray addObject:[NSNull null]];
+    // 初始化展示给用户的首页图片
+    _openedIndex = 0;
+    [self addImgViewInBgScrollView];
+}
+
+
+#pragma mark - 裁切
+- (void)capture
+{
+    // 如果图片有了批注,就不能进行裁切
+    if (self.openedImgView!=nil) {
+        Homework *model = self.openImageArray[_openedIndex];
+        NSArray *pizhu = model.pizhuArray;
+        if (!(pizhu && pizhu.count > 0)) {
+            
+            HXCutPictureViewController *vc = [[HXCutPictureViewController alloc] initWithCropImage:self.openedImgView.image  cropSize:self.openedImgView.frame.size title:@"裁剪" isLast:YES];
+            vc.completion = ^(HXCutPictureViewController *vc, UIImage *finishImage) {
+                self.openedImgView.image = finishImage;
+            };
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }
+        
+    }
+}
+
+#pragma mark - 批注
+- (void)postil
+{
+    // 如果有了批注序号,才能进入批注详情
+    if (self.pizhuCountArray && self.pizhuCountArray.count <= 0) {
+        return;
+    }
+    UIImageView *imgView = [self.bgScrollView viewWithTag:10+_openedIndex];
+    NSMutableArray *copyArray = [self.pizhuCountArray mutableCopy];
+    __block NSNumber *numberCount = [copyArray objectAtIndex:_openedIndex];
+    
+    UIButton *pizhuBtn = [imgView viewWithTag:100+[numberCount integerValue]];
+    if (pizhuBtn != nil) {
+        typeof(self) __weak weakSelf = self;
+        PiZhuViewController *vc = [[PiZhuViewController alloc] init];
+        vc.pathBlock = ^ (NSString *paths, NSString *text){
+            
+            //                    [weakSelf.pathArray addObject:[NSMutableArray arrayWithArray:paths]];
+            [weakSelf.pathArray replaceObjectAtIndex:_openedIndex withObject:[NSMutableArray arrayWithObject:paths]];
+            NSMutableArray *arr = [self.pizhuArray mutableCopy];
+            Mark *model = arr[[numberCount integerValue]-1];
+            model.content = text;
+            
+            // 第一个批注完成，进入下一个批注
+            NSInteger count = [numberCount integerValue];
+            count ++;
+            numberCount = [NSNumber numberWithInteger:count];
+            [copyArray replaceObjectAtIndex:_openedIndex withObject:numberCount];
+            self.pizhuCountArray = copyArray;
+        };
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+#pragma mark - 打开
+- (void)openHomework
+{
+    if (self.state == 0) {
+        [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
+        return;
+    }
+    SubjectFolderViewController *vc = [[SubjectFolderViewController alloc] init];
+    vc.type = FolderTypeOpen;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+
+#pragma mark - 删除
+- (void)delete
+{
+    if (self.state == 0) {
+        [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
+        return;
+    }
+    
+    // 如果当前工作区有图片才能删除
+    if (self.openedImgView != nil) {
+        Homework *modal = self.openImageArray[_openedIndex];
+        if ([modal.homeworkId isEqualToString:@""]) {
+            return;
+        }
+        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"删除" message:@"确定要删除该图片及其批注?" sureBtn:@"删除" cancleBtn:@"取消"];
+        alertView.resultIndex = ^(NSInteger index)
+        {
+            // 回调 -- 处理
+            //        NSLog(@"%s",__func__);
+            [self deleteRequest];
+        };
+        [alertView showPopView];
+        
+    }
+
+}
+
+#pragma mark - 导出
+- (void)saveImageToiPhone
+{
+    // 如果工作区有图片,导出到相册
+    if (self.openedImgView != nil) {
+        UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    
+    if (error == nil) {
+        
+        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出" message:@"文件已导出成功" sureBtn:@"确定" cancleBtn:nil];
+        [alertView showPopView];
+        
+    }else{
+        
+        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出" message:@"文件导出失败" sureBtn:@"确定" cancleBtn:nil];
+        [alertView showPopView];
+    }
+    
+}
+
+#pragma mark - 上传
+- (void)upload
+{
+    if (self.state == 0) {
+        [SVProgressHUD showErrorWithStatus:@"还未通过审核"];
+        return;
+    }
+    if (self.openedImgView != nil) {
+        [self uploadImage];
     }
 }
 
@@ -1068,14 +1174,9 @@
     
 }
 
-- (void)openSubjects
-{
-    SubjectFolderViewController *vc = [[SubjectFolderViewController alloc] init];
-    vc.type = FolderTypeOpen;
-    [self.navigationController pushViewController:vc animated:YES];
-}
 
-- (void)delete
+
+- (void)deleteRequest
 {
     Homework *modal = self.openImageArray[_openedIndex];
     
@@ -1278,7 +1379,7 @@
     }
 }
 
-#pragma mark - AlertViewDataSource
+#pragma mark - CustomeAlertViewDataSource
 - (NSInteger)alertCollectionView:(CustomeAlertViewWithCollection *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return self.subjectsArray.count;
@@ -1297,7 +1398,7 @@
     return cell;
 }
 
-#pragma mark - AlertViewDelegate
+#pragma mark - CustomeAlertViewDelegate
 - (void)alertCollectionView:(CustomeAlertViewWithCollection *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.subjectCellDict) {
@@ -1316,8 +1417,8 @@
     }
 }
 
-
-#pragma mark - UIAlertViewDelegate
+#pragma mark - 更新
+#pragma mark UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
@@ -1325,116 +1426,9 @@
     }
 }
 
-#pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        BOOL isCamera = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
-        if (!isCamera) {
-            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"没有摄像头" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-            [alertView show];
-            return ;
-        }
-        //从摄像头获取活动图片
-        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-        imagePicker.delegate = self;
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        imagePicker.allowsEditing = YES;
-        [self presentViewController:imagePicker animated:YES completion:^{}];
-        
-        
-    }else if (buttonIndex == 0) {
-#if 0
-        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-        UIPopoverController *popVC = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        popVC.popoverContentSize = CGSizeMake(SCREENWIDTH*0.5, 180);
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        imagePicker.delegate = self;
-        imagePicker.allowsEditing = YES;
-        imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
-        [imagePicker shouldAutorotate];
-        [[AppDefaultUtil sharedInstance] setPhotoLibary:YES];
-        
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [popVC presentPopoverFromRect:CGRectMake(SCREENWIDTH*0.5-120*0.5,30,120,120) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-            
-        }else{
-            [self presentViewController:imagePicker animated:YES completion:^{}];
-        }
-#endif
-        
-        PhotoGroupViewController *vc = [[PhotoGroupViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-        
-        
-    }
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-// 完成拍照后的回调方法
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-    NSString *mediaType=[info objectForKey:UIImagePickerControllerMediaType];
-    // 如果是拍照
-    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image;
-        // 如果允许编辑则获得编辑后的照片，否则获取原始照片
-        if (picker.allowsEditing) {
-            // 获取编辑后的照片
-            image = [info objectForKey:UIImagePickerControllerEditedImage];
-        }
-        else{
-            // 获取原始照片
-            image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        }
-        
-        
-        [self cameraWithImage:image];
-        
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)getThumbnailImages
-{
-    // 获得所有的自定义相簿
-    PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    // 遍历所有的自定义相簿
-    for (PHAssetCollection *assetCollection in assetCollections) {
-        [self enumerateAssetsInAssetCollection:assetCollection original:NO];
-    }
-    // 获得相机胶卷
-    PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
-    [self enumerateAssetsInAssetCollection:cameraRoll original:NO];
-}
-
-/**
- *  遍历相簿中的所有图片
- *  @param assetCollection 相簿
- *  @param original        是否要原图
- */
-- (void)enumerateAssetsInAssetCollection:(PHAssetCollection *)assetCollection original:(BOOL)original
-{
-    NSLog(@"相簿名:%@", assetCollection.localizedTitle);
-    
-    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-    // 同步获得图片, 只会返回1张图片
-    options.synchronous = YES;
-    
-    // 获得某个相簿中的所有PHAsset对象
-    PHFetchResult<PHAsset *> *assets = [PHAsset fetchAssetsInAssetCollection:assetCollection options:nil];
-    for (PHAsset *asset in assets) {
-        // 是否要原图
-        CGSize size = original ? CGSizeMake(asset.pixelWidth, asset.pixelHeight) : CGSizeZero;
-        
-        // 从asset中获得图片
-        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            NSLog(@"%@", result);
-        }];
-    }
-}
-
-#pragma mark - touch
 /*
+#pragma mark - touch
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [self addTouchPoint:touches];

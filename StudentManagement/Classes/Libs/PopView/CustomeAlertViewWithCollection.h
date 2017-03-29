@@ -10,7 +10,7 @@
 
 @class CustomeAlertViewWithCollection;
 
-@protocol AlertViewDataSource <NSObject>
+@protocol CustomeAlertViewDataSource <NSObject>
 //ZJAlertListView有多少行
 - (NSInteger)alertCollectionView:(CustomeAlertViewWithCollection *)collectionView numberOfItemsInSection:(NSInteger)section;
 //ZJAlertListView每个cell的样式
@@ -19,7 +19,7 @@
 @end
 
 //代理方法
-@protocol AlertViewDelegate <NSObject>
+@protocol CustomeAlertViewDelegate <NSObject>
 //ZJAlertListView cell的选中
 - (void)alertCollectionView:(CustomeAlertViewWithCollection *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 //ZJAlertListView cell为被选中
@@ -33,9 +33,9 @@ typedef void(^AlertResultIndexPath)(NSIndexPath *indexpath);
 
 @property(nonatomic,copy) AlertResultIndexPath resultIndexpath;
 
-@property (nonatomic, strong) id <AlertViewDataSource> datasource;
+@property (nonatomic, strong) id <CustomeAlertViewDataSource> datasource;
 
-@property (nonatomic, weak) id <AlertViewDelegate> delegate;
+@property (nonatomic, weak) id <CustomeAlertViewDelegate> delegate;
 
 @property(nonatomic,strong) NSArray *dataArray;
 
