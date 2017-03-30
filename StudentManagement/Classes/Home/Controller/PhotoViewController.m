@@ -109,7 +109,7 @@
             modal.imageUrlStr = @"";
             modal.isSel = NO;
             modal.homeworkId = @"";
-            modal.homeworkName = [asset valueForKey:@"filename"];
+//            modal.homeworkName = [asset valueForKey:@"filename"];
             [self.allArray addObject:modal];
 //            NSLog(@"UIImage:%@, fileName:%@", result, [asset valueForKey:@"filename"]);
         }];

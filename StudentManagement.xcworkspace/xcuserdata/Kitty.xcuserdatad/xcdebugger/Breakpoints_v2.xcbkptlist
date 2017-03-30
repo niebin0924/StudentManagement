@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512532996.801532"
+            timestampString = "512551575.811533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1190"
-            endingLineNumber = "1190"
+            startingLineNumber = "1205"
+            endingLineNumber = "1205"
             landmarkName = "-deleteRequest"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512532996.801532"
+            timestampString = "512551575.811533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1236"
-            endingLineNumber = "1236"
+            startingLineNumber = "1251"
+            endingLineNumber = "1251"
             landmarkName = "-runDispatch"
             landmarkType = "7">
          </BreakpointContent>
@@ -164,11 +164,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512532996.801532"
+            timestampString = "512551575.811533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1153"
-            endingLineNumber = "1153"
+            startingLineNumber = "1168"
+            endingLineNumber = "1168"
             landmarkName = "-uploadToServer:"
             landmarkType = "7">
          </BreakpointContent>
@@ -180,11 +180,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/HomeViewController.m"
-            timestampString = "512532996.801532"
+            timestampString = "512551575.811533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1333"
-            endingLineNumber = "1333"
+            startingLineNumber = "1348"
+            endingLineNumber = "1348"
             landmarkName = "-images"
             landmarkType = "7">
          </BreakpointContent>
@@ -228,28 +228,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "StudentManagement/Classes/Home/Controller/PhotoAssetViewController.m"
-            timestampString = "512467255.993816"
+            timestampString = "512550580.623329"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
             landmarkName = "-setSelectPickerAssets:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "StudentManagement/Classes/Home/Controller/PhotoAssetViewController.m"
-            timestampString = "512467255.993816"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "-sureClick"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -266,6 +250,22 @@
             startingLineNumber = "45"
             endingLineNumber = "45"
             landmarkName = "-setImageWithUrlStr:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "StudentManagement/Classes/Home/Controller/PiZhuViewController.m"
+            timestampString = "512553552.467865"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "497"
+            endingLineNumber = "497"
+            landmarkName = "-printAssetsName:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

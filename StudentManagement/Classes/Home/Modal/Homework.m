@@ -10,4 +10,32 @@
 
 @implementation Homework
 
+// 归档
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.assetURL forKey:@"assetURL"];
+    [aCoder encodeObject:self.pizhuArray forKey:@"pizhuArray"];
+    [aCoder encodeObject:self.homeworkName forKey:@"homeworkName"];
+}
+
+// 解档
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super init]) {
+        self.assetURL = [aDecoder decodeObjectForKey:@"assetURL"];
+        self.homeworkName = [aDecoder decodeObjectForKey:@"homeworkName"];
+        self.pizhuArray = [aDecoder decodeObjectForKey:@"pizhuArray"];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    self.assetURL = nil;
+    self.homeworkName = nil;
+    self.pizhuArray = nil;
+}
+
+
 @end

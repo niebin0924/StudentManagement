@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Mark : NSObject
+@interface Mark : NSObject <NSCoding>
 
 @property (nonatomic,assign) float x;
 @property (nonatomic,assign) float y;
 @property (nonatomic,copy) NSString *content;
 // 存储多张图片的url
-@property (nonatomic,copy) NSArray *content_img;
+@property (nonatomic,copy) NSArray<NSString *> *content_img;
 
 - (NSDictionary *)TurnToDict;
 

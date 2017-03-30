@@ -15,6 +15,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "TZImagePickerController+LandScapeImagePicker.h"
+#import "Mark.h"
 
 
 @interface PiZhuViewController () <TZImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate,UINavigationControllerDelegate,UITextViewDelegate>
@@ -458,6 +459,10 @@
 // 提交
 - (void)sumbit
 {
+    // 归档
+    Mark *mark = [[Mark alloc] init];
+    
+    
     // 方法：把图片直接保存到沙盒中，然后再把路径存储起来，等到用图片的时候先获取图片的路径，再通过路径拿到图片
     NSMutableArray *paths = [NSMutableArray array];
     for (NSInteger i=0; i<_selectedPhotos.count; i++) {
@@ -495,6 +500,22 @@
         if ([asset isKindOfClass:[PHAsset class]]) {
             PHAsset *phAsset = (PHAsset *)asset;
             fileName = [phAsset valueForKey:@"filename"];
+            
+            NSRange range = [phAsset.localIdentifier rangeOfString:@"/"];
+            NSString *newString = [phAsset.localIdentifier substringToIndex:range.location];
+            NSString *appendedString=[NSString stringWithFormat:@"%@%@%@",@"assets-library://asset/asset.JPG?id=",newString,@"&ext=JPG"];
+            
+            PHContentEditingInputRequestOptions *editOptions = [[PHContentEditingInputRequestOptions alloc] init];
+            [phAsset requestContentEditingInputWithOptions:editOptions completionHandler:^(PHContentEditingInput * _Nullable contentEditingInput, NSDictionary * _Nonnull info) {
+                NSURL *imageURL = contentEditingInput.fullSizeImageURL;
+                /*
+                 file:///Users/Kitty/Library/Developer/CoreSimulator/Devices/F378BEAC-61F2-423B-9065-623D9106F555/data/Media/DCIM/100APPLE/IMG_0006.JPG
+                 
+                 file:///var/mobile/Media/DCIM/100APPLE/IMG_0029.JPG
+                 */
+                NSLog(@"%@%@",imageURL,appendedString);
+            }];
+            
         } else if ([asset isKindOfClass:[ALAsset class]]) {
             ALAsset *alAsset = (ALAsset *)asset;
             fileName = alAsset.defaultRepresentation.filename;;

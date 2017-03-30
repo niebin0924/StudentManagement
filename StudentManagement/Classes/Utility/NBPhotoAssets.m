@@ -48,8 +48,8 @@
     return [type isEqualToString:ALAssetTypeVideo];
 }
 
-- (NSURL *)assetURL{
-    return [[self.asset defaultRepresentation] url];
+- (NSString *)assetURLString{
+    return [[[self.asset defaultRepresentation] url] absoluteString];
 }
 
 - (NSString *)fileName{

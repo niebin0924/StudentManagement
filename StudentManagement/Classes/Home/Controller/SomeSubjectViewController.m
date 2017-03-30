@@ -225,12 +225,12 @@
     if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
 //        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
         
-        [cell.photoImageView JYloadWebImage:modal.imageUrlStr placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+        [cell.photoImageView JYloadWebImage:modal.imageUrlStr placeholderImage:nil];
         
     }else{
 //        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageUrlStr]]];
         
-        [cell.photoImageView JYloadWebImage:[BaseURL stringByAppendingString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+        [cell.photoImageView JYloadWebImage:[BaseURL stringByAppendingString:modal.imageUrlStr] placeholderImage:nil];
     }
     
     

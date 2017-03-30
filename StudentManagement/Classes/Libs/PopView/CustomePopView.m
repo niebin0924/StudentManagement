@@ -218,7 +218,7 @@
     self.textField.borderStyle = UITextBorderStyleNone;
     self.textField.tag = 3;
     self.textField.font = [UIFont systemFontOfSize:17];
-    self.textField.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.textField.translatesAutoresizingMaskIntoConstraints = NO;
     self.textField.layer.borderWidth = 1;
     self.textField.layer.borderColor = [[UIColor colorWithRed:197/255.0 green:197/255.0 blue:197/255.0 alpha:1] CGColor];
     self.textField.leftViewMode = UITextFieldViewModeAlways;

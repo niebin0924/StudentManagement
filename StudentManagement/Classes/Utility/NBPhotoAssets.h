@@ -33,7 +33,7 @@
 /**
  *  获取相片的URL
  */
-- (NSURL *)assetURL;
+- (NSString *)assetURLString;
 
 /**
  *  获取相片的文件名

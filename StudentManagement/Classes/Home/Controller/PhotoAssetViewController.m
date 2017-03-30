@@ -76,6 +76,7 @@
             modal.imageUrlStr = @"";
             modal.homeworkId = @"";
             modal.isSel = asset.isSel;
+            modal.assetURL = asset.assetURLString;
             //asset.assetURL: assets-library://asset/asset.JPG?id=2D08F9F8-9B8F-4C31-8E2C-03099CEAB42D&ext=JPG
             [_photoArr addObject:modal];
         }

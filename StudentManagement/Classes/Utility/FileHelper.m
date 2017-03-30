@@ -46,7 +46,7 @@ static FileHelper *shareInstance = nil;
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir = NO;
-    if (![fileManager fileExistsAtPath:directryPath isDirectory:&isDir]) {
+    if (![fileManager fileExistsAtPath:directryPath isDirectory:&isDir] || !isDir) {
         
         BOOL isSuc = [fileManager createDirectoryAtPath:directryPath withIntermediateDirectories:YES attributes:nil error:nil];
         if (isSuc) {

@@ -33,7 +33,7 @@
     NSInteger _currPage;
     NSString *_subjectId;
     NSString *_homeworkId;
-    NSInteger _openedIndex;
+    NSInteger _openedIndex;//当前工作区展示的下标
     BOOL _isUpdate;//是否是更新作业
     NSInteger _pizhuIndex;//点击的是哪一个批注label
 }
@@ -162,7 +162,7 @@
     return _itemsArr;
 }
 
-#pragma mark -
+#pragma mark - 接收通知
 - (void)showHomework:(NSNotification *)notfi
 {
     id object = notfi.object;
@@ -223,7 +223,7 @@
         
         [self.imgViewArray addObject:imgView];
         
-        // 在图片上标注批注点
+        // 在图片上标注批注点Tap
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPizhu:)];
         tap.numberOfTapsRequired = 1;
         tap.numberOfTouchesRequired = 1;//手指数
@@ -241,18 +241,13 @@
                 if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
                     
                     [imgView JYloadWebImage:modal.imageUrlStr placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
-                    
-                    //                [MAImageViewTool MA_setIndicatorImageWithUrlString:modal.imageUrlStr placeHolder:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"] imageView:imgView];
-                    
-                    //                [imgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
-                    modal.img = imgView.image;
-                    
-                    
+
                 }else {
                     
                     [imgView JYloadWebImage:[BaseURL stringByAppendingString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
                     
                 }
+                modal.img = imgView.image;
             }
             
             if (i == _openedIndex) {
@@ -262,6 +257,7 @@
         }
 
     }
+    
 }
 
 - (void)tapPizhu:(UITapGestureRecognizer *)tap
@@ -706,7 +702,7 @@
         case 18: // 导出
         {
             
-            [self saveImageToiPhone];
+            [self saveWorkToLocal];
             
         }
             break;
@@ -723,7 +719,7 @@
 #pragma mark - 导入
 - (void)import
 {
-    UIActionSheet *sheeet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"选择相册",@"拍照", nil];
+    UIActionSheet *sheeet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"选择相册",@"拍照",@"本地", nil];
     [sheeet showInView:self.view];
 }
 
@@ -768,6 +764,9 @@
         PhotoGroupViewController *vc = [[PhotoGroupViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
         
+        
+    }else{
+        // 本地
         
     }
 }
@@ -868,7 +867,6 @@
         PiZhuViewController *vc = [[PiZhuViewController alloc] init];
         vc.pathBlock = ^ (NSString *paths, NSString *text){
             
-            //                    [weakSelf.pathArray addObject:[NSMutableArray arrayWithArray:paths]];
             [weakSelf.pathArray replaceObjectAtIndex:_openedIndex withObject:[NSMutableArray arrayWithObject:paths]];
             NSMutableArray *arr = [self.pizhuArray mutableCopy];
             Mark *model = arr[[numberCount integerValue]-1];
@@ -927,12 +925,30 @@
 }
 
 #pragma mark - 导出
-- (void)saveImageToiPhone
+- (void)saveWorkToLocal
 {
-    // 如果工作区有图片,导出到相册
+    // 如果工作区有图片,导出到本地
     if (self.openedImgView != nil) {
-        UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+//        UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        
+        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出到本地" message:nil sureBtn:@"确定" cancleBtn:@"取消"];
+        alertView.resultIndex = ^(NSInteger index)
+        {
+            NSLog(@"%s",__func__);
+            [self saveWork];
+            
+        };
+        [alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+           textField.placeholder = @"请输入作业名";
+        }];
+        [alertView showPopView];
     }
+}
+
+- (void)saveWork
+{
+    Homework *model = self.openImageArray[_openedIndex];
+    NSLog(@"%@ mark:%@",model,model.pizhuArray);
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
