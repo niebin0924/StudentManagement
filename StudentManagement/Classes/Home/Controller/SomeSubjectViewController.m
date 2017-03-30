@@ -223,10 +223,17 @@
     
     Homework *modal = self.dataArray[indexPath.item];
     if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
-        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+//        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+        
+        [cell.photoImageView JYloadWebImage:modal.imageUrlStr placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+        
     }else{
-        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageUrlStr]]];
+//        [cell.photoImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.imageUrlStr]]];
+        
+        [cell.photoImageView JYloadWebImage:[BaseURL stringByAppendingString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
     }
+    
+    
     cell.nameLabel.text = modal.homeworkName;
     cell.selectBtn.selected = NO;
     

@@ -398,7 +398,10 @@
     PopImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     NSString *imgName = self.dataArray[indexPath.item];
-    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:imgName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+//    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:imgName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+    
+    [cell.iconImageView JYloadWebImage:imgName placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+    
     cell.iconImageView.tag = 100 + indexPath.item;
     
     return cell;

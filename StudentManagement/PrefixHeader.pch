@@ -25,6 +25,7 @@
 #import "Masonry.h"
 #import "JSONKit.h"
 #import "YYKit.h"
+#import "UIImageView+WebImage.h"
 
 #import "AppDefaultUtil.h"
 #import "ColorTools.h"

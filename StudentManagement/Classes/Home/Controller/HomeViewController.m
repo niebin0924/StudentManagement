@@ -18,13 +18,14 @@
 #import "CustomePopView.h"
 #import "CustomeAlertViewWithCollection.h"
 #import "FolderCollectionViewCell.h"
-#import <Photos/Photos.h>
 #import "Homework.h"
 #import "Mark.h"
 #import "URLSessionWrapperOperation.h"
 #import "HXCutPictureViewController.h"
 #import "PopImageCollectionViewCell.h"
 #import "KNPhotoBrower.h"
+#import "DACircularProgressView.h"
+#import "MAImageViewTool.h"
 
 
 @interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,KNPhotoBrowerDelegate>
@@ -233,26 +234,29 @@
         if ([object isKindOfClass:[Homework class]]) {
             // 打开
             Homework *modal = object;
-            if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
-                
-                [imgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
-                modal.img = imgView.image;
-                
-                
-            }else {
-                
+            if ([modal.imageUrlStr isEqualToString:@""]) {
                 // 从相册读取
                 imgView.image = modal.img;
-                
+            }else{
+                if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
+                    
+                    [imgView JYloadWebImage:modal.imageUrlStr placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+                    
+                    //                [MAImageViewTool MA_setIndicatorImageWithUrlString:modal.imageUrlStr placeHolder:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"] imageView:imgView];
+                    
+                    //                [imgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+                    modal.img = imgView.image;
+                    
+                    
+                }else {
+                    
+                    [imgView JYloadWebImage:[BaseURL stringByAppendingString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+                    
+                }
             }
             
             if (i == _openedIndex) {
-                
-                if ([modal.imageUrlStr isEqualToString:@""]) {
-                    self.openedImgView = imgView;
-                }else {
-                    [self.openedImgView sd_setImageWithURL:[NSURL URLWithString:modal.imageUrlStr] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
-                }
+                self.openedImgView = imgView;
             }
             
         }

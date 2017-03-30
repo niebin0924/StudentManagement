@@ -378,9 +378,14 @@
         //            cell.headImgView.contentMode = UIViewContentModeScaleAspectFit;
         
         if ([modal.content rangeOfString:@"http"].location != NSNotFound) {
-            [cell.headImgView sd_setImageWithURL:[NSURL URLWithString:modal.content] placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+//            [cell.headImgView sd_setImageWithURL:[NSURL URLWithString:modal.content] placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+            
+            [cell.headImgView JYloadWebImage:modal.content placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+            
         }else{
-            [cell.headImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.content]] placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+//            [cell.headImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",BaseURL,modal.content]] placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+            [cell.headImgView JYloadWebImage:[BaseURL stringByAppendingString:modal.content] placeholderImage:[UIImage imageNamed:@"pic_headerpic"]];
+            
         }
         self.headImage = cell.headImgView.image;
         

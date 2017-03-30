@@ -39,7 +39,6 @@
 		4FCE2E0D1E63C7FD0051F625 /* AdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE2E0C1E63C7FD0051F625 /* AdViewController.m */; };
 		4FCE2E101E63D0570051F625 /* UIImage+ALinExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE2E0F1E63D0570051F625 /* UIImage+ALinExtension.m */; };
 		4FCE2E131E63FE690051F625 /* AdvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE2E121E63FE690051F625 /* AdvertiseView.m */; };
-		4FCE2E191E64064B0051F625 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FCE2E181E64064B0051F625 /* NSString+MD5.m */; };
 		4FE4B40D1E67B39C002A2B9E /* Homework.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4B40C1E67B39C002A2B9E /* Homework.m */; };
 		4FE4DE411E8A39FE0046F0D2 /* NBPhotoPickerGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4DE401E8A39FE0046F0D2 /* NBPhotoPickerGroup.m */; };
 		4FE4DE441E8A3A6E0046F0D2 /* NBPhotoPickerDatas.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4DE431E8A3A6E0046F0D2 /* NBPhotoPickerDatas.m */; };
@@ -49,6 +48,8 @@
 		4FE6E5181E6515A200AB34A3 /* LxGridViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E5151E6515A200AB34A3 /* LxGridViewFlowLayout.m */; };
 		4FE6E5191E6515A200AB34A3 /* TZTestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E5171E6515A200AB34A3 /* TZTestCell.m */; };
 		4FE6E51C1E65248300AB34A3 /* FEPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E51B1E65248300AB34A3 /* FEPlaceHolderTextView.m */; };
+		4FE7451E1E8C9C2300F5AD9C /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7451B1E8C9C2300F5AD9C /* ImageCache.m */; };
+		4FE7451F1E8C9C2300F5AD9C /* UIImageView+WebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7451D1E8C9C2300F5AD9C /* UIImageView+WebImage.m */; };
 		4FE758EC1E8260BE00FF5A61 /* PhotoAssetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE758EB1E8260BE00FF5A61 /* PhotoAssetViewController.m */; };
 		4FE758EF1E82621700FF5A61 /* NBAblumTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE758EE1E82621700FF5A61 /* NBAblumTool.m */; };
 		4FE758F21E826A6700FF5A61 /* AssetCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE758F11E826A6700FF5A61 /* AssetCollectionViewCell.m */; };
@@ -59,6 +60,8 @@
 		4FE792691E5EE59700DAD729 /* PopImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE792681E5EE59700DAD729 /* PopImageCollectionViewCell.m */; };
 		4FE7926B1E5EE5A100DAD729 /* PopImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FE7926A1E5EE5A100DAD729 /* PopImageCollectionViewCell.xib */; };
 		4FE7BB2F1E8B43E20090B679 /* FileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7BB2E1E8B43E20090B679 /* FileHelper.m */; };
+		4FE7BB331E8BA6B80090B679 /* DACircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7BB321E8BA6B80090B679 /* DACircularProgressView.m */; };
+		4FE7BB3A1E8BB8470090B679 /* MAImageViewTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7BB391E8BB8470090B679 /* MAImageViewTool.m */; };
 		4FE7C9591E56C87E00CD57CC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7C9561E56C87E00CD57CC /* LoginViewController.m */; };
 		4FE7C95A1E56C87E00CD57CC /* RegistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7C9581E56C87E00CD57CC /* RegistViewController.m */; };
 		4FE7C95D1E56C88F00CD57CC /* ForgetPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE7C95C1E56C88F00CD57CC /* ForgetPwdViewController.m */; };
@@ -195,8 +198,6 @@
 		4FCE2E0F1E63D0570051F625 /* UIImage+ALinExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ALinExtension.m"; sourceTree = "<group>"; };
 		4FCE2E111E63FE690051F625 /* AdvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvertiseView.h; sourceTree = "<group>"; };
 		4FCE2E121E63FE690051F625 /* AdvertiseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertiseView.m; sourceTree = "<group>"; };
-		4FCE2E171E64064B0051F625 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
-		4FCE2E181E64064B0051F625 /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		4FE4B40B1E67B39C002A2B9E /* Homework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Homework.h; sourceTree = "<group>"; };
 		4FE4B40C1E67B39C002A2B9E /* Homework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Homework.m; sourceTree = "<group>"; };
 		4FE4DE3F1E8A39FE0046F0D2 /* NBPhotoPickerGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhotoPickerGroup.h; sourceTree = "<group>"; };
@@ -215,6 +216,10 @@
 		4FE6E5171E6515A200AB34A3 /* TZTestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZTestCell.m; sourceTree = "<group>"; };
 		4FE6E51A1E65248300AB34A3 /* FEPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEPlaceHolderTextView.h; sourceTree = "<group>"; };
 		4FE6E51B1E65248300AB34A3 /* FEPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FEPlaceHolderTextView.m; sourceTree = "<group>"; };
+		4FE7451A1E8C9C2300F5AD9C /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCache.h; sourceTree = "<group>"; };
+		4FE7451B1E8C9C2300F5AD9C /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCache.m; sourceTree = "<group>"; };
+		4FE7451C1E8C9C2300F5AD9C /* UIImageView+WebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+WebImage.h"; sourceTree = "<group>"; };
+		4FE7451D1E8C9C2300F5AD9C /* UIImageView+WebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebImage.m"; sourceTree = "<group>"; };
 		4FE758EA1E8260BE00FF5A61 /* PhotoAssetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAssetViewController.h; sourceTree = "<group>"; };
 		4FE758EB1E8260BE00FF5A61 /* PhotoAssetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoAssetViewController.m; sourceTree = "<group>"; };
 		4FE758ED1E82621700FF5A61 /* NBAblumTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBAblumTool.h; sourceTree = "<group>"; };
@@ -232,6 +237,10 @@
 		4FE7926A1E5EE5A100DAD729 /* PopImageCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopImageCollectionViewCell.xib; sourceTree = "<group>"; };
 		4FE7BB2D1E8B43E20090B679 /* FileHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHelper.h; sourceTree = "<group>"; };
 		4FE7BB2E1E8B43E20090B679 /* FileHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileHelper.m; sourceTree = "<group>"; };
+		4FE7BB311E8BA6B80090B679 /* DACircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DACircularProgressView.h; sourceTree = "<group>"; };
+		4FE7BB321E8BA6B80090B679 /* DACircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DACircularProgressView.m; sourceTree = "<group>"; };
+		4FE7BB381E8BB8470090B679 /* MAImageViewTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAImageViewTool.h; sourceTree = "<group>"; };
+		4FE7BB391E8BB8470090B679 /* MAImageViewTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAImageViewTool.m; sourceTree = "<group>"; };
 		4FE7C9551E56C87E00CD57CC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		4FE7C9561E56C87E00CD57CC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		4FE7C9571E56C87E00CD57CC /* RegistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistViewController.h; sourceTree = "<group>"; };
@@ -532,8 +541,6 @@
 				4FBB1D631E5432E100231D84 /* UIView+Frame.m */,
 				4FBB1D651E5432F900231D84 /* UIView+Toast.h */,
 				4FBB1D661E5432F900231D84 /* UIView+Toast.m */,
-				4FCE2E171E64064B0051F625 /* NSString+MD5.h */,
-				4FCE2E181E64064B0051F625 /* NSString+MD5.m */,
 				4FEC85C91E6FA8A5006DC4DB /* TZImagePickerController+LandScapeImagePicker.h */,
 				4FEC85CA1E6FA8A5006DC4DB /* TZImagePickerController+LandScapeImagePicker.m */,
 			);
@@ -543,6 +550,9 @@
 		4FBB1D5C1E54326400231D84 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				4FE745191E8C9C2300F5AD9C /* ImageCache */,
+				4FE7BB371E8BB8470090B679 /* MAImageViewTool */,
+				4FE7BB301E8BA6B80090B679 /* DACircularProgress */,
 				4F1DE0BB1E81280F006C8CAB /* CutPicture */,
 				4F1DE0911E80FA12006C8CAB /* PhotoBrowser */,
 				4F9D07511E6EB9D7004C5C97 /* JSONKit */,
@@ -605,6 +615,32 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
+		4FE745191E8C9C2300F5AD9C /* ImageCache */ = {
+			isa = PBXGroup;
+			children = (
+				4FE7451A1E8C9C2300F5AD9C /* ImageCache.h */,
+				4FE7451B1E8C9C2300F5AD9C /* ImageCache.m */,
+				4FE7451C1E8C9C2300F5AD9C /* UIImageView+WebImage.h */,
+				4FE7451D1E8C9C2300F5AD9C /* UIImageView+WebImage.m */,
+			);
+			path = ImageCache;
+			sourceTree = "<group>";
+		};
+		4FE745201E8CA41D00F5AD9C /* PhotoData */ = {
+			isa = PBXGroup;
+			children = (
+				4FE758ED1E82621700FF5A61 /* NBAblumTool.h */,
+				4FE758EE1E82621700FF5A61 /* NBAblumTool.m */,
+				4FE4DE3F1E8A39FE0046F0D2 /* NBPhotoPickerGroup.h */,
+				4FE4DE401E8A39FE0046F0D2 /* NBPhotoPickerGroup.m */,
+				4FE4DE421E8A3A6E0046F0D2 /* NBPhotoPickerDatas.h */,
+				4FE4DE431E8A3A6E0046F0D2 /* NBPhotoPickerDatas.m */,
+				4FE4DE451E8A3CC50046F0D2 /* NBPhotoAssets.h */,
+				4FE4DE461E8A3CC50046F0D2 /* NBPhotoAssets.m */,
+			);
+			name = PhotoData;
+			sourceTree = "<group>";
+		};
 		4FE792631E5ED0AE00DAD729 /* PopView */ = {
 			isa = PBXGroup;
 			children = (
@@ -617,6 +653,24 @@
 				4FEC85D51E6FF9C5006DC4DB /* CustomeAlertViewWithCollection.m */,
 			);
 			path = PopView;
+			sourceTree = "<group>";
+		};
+		4FE7BB301E8BA6B80090B679 /* DACircularProgress */ = {
+			isa = PBXGroup;
+			children = (
+				4FE7BB311E8BA6B80090B679 /* DACircularProgressView.h */,
+				4FE7BB321E8BA6B80090B679 /* DACircularProgressView.m */,
+			);
+			path = DACircularProgress;
+			sourceTree = "<group>";
+		};
+		4FE7BB371E8BB8470090B679 /* MAImageViewTool */ = {
+			isa = PBXGroup;
+			children = (
+				4FE7BB381E8BB8470090B679 /* MAImageViewTool.h */,
+				4FE7BB391E8BB8470090B679 /* MAImageViewTool.m */,
+			);
+			path = MAImageViewTool;
 			sourceTree = "<group>";
 		};
 		4FE7C9801E56E50D00CD57CC /* ImageTextButton */ = {
@@ -640,18 +694,11 @@
 		4FECBB861E6016FE00A8C675 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				4FE745201E8CA41D00F5AD9C /* PhotoData */,
 				4FECBB871E6016FE00A8C675 /* AppDefaultUtil.h */,
 				4FECBB881E6016FE00A8C675 /* AppDefaultUtil.m */,
 				4FECBB891E6016FE00A8C675 /* ColorTools.h */,
 				4FECBB8A1E6016FE00A8C675 /* ColorTools.m */,
-				4FE758ED1E82621700FF5A61 /* NBAblumTool.h */,
-				4FE758EE1E82621700FF5A61 /* NBAblumTool.m */,
-				4FE4DE3F1E8A39FE0046F0D2 /* NBPhotoPickerGroup.h */,
-				4FE4DE401E8A39FE0046F0D2 /* NBPhotoPickerGroup.m */,
-				4FE4DE421E8A3A6E0046F0D2 /* NBPhotoPickerDatas.h */,
-				4FE4DE431E8A3A6E0046F0D2 /* NBPhotoPickerDatas.m */,
-				4FE4DE451E8A3CC50046F0D2 /* NBPhotoAssets.h */,
-				4FE4DE461E8A3CC50046F0D2 /* NBPhotoAssets.m */,
 				4FE7BB2D1E8B43E20090B679 /* FileHelper.h */,
 				4FE7BB2E1E8B43E20090B679 /* FileHelper.m */,
 			);
@@ -985,6 +1032,7 @@
 				4FECBB7D1E5FDD1300A8C675 /* SubjectInfo.m in Sources */,
 				4FBB1D911E5447EE00231D84 /* BaseViewController.m in Sources */,
 				4FE758F21E826A6700FF5A61 /* AssetCollectionViewCell.m in Sources */,
+				4FE7451F1E8C9C2300F5AD9C /* UIImageView+WebImage.m in Sources */,
 				4FBB1D231E542DC700231D84 /* AppDelegate.m in Sources */,
 				4FBB1D201E542DC700231D84 /* main.m in Sources */,
 				4FBB1D641E5432E100231D84 /* UIView+Frame.m in Sources */,
@@ -1011,6 +1059,7 @@
 				4FE8E5B71E72A41800653A30 /* URLSessionWrapperOperation.m in Sources */,
 				4F1DE0B21E8105D1006C8CAB /* KNActionSheetView.m in Sources */,
 				4FECBBC21E60188500A8C675 /* FolderCollectionViewCell.m in Sources */,
+				4FE7451E1E8C9C2300F5AD9C /* ImageCache.m in Sources */,
 				4FECBB9C1E6017B700A8C675 /* PersonalModal.m in Sources */,
 				4FECBBC61E60188500A8C675 /* InfoTableViewCell.m in Sources */,
 				4F1DE0B81E8105D1006C8CAB /* KNProgressHUD.m in Sources */,
@@ -1035,11 +1084,12 @@
 				4FE7BB2F1E8B43E20090B679 /* FileHelper.m in Sources */,
 				4FECBBD51E60219500A8C675 /* PhotoViewController.m in Sources */,
 				4FE7C9591E56C87E00CD57CC /* LoginViewController.m in Sources */,
+				4FE7BB331E8BA6B80090B679 /* DACircularProgressView.m in Sources */,
 				4FE758EC1E8260BE00FF5A61 /* PhotoAssetViewController.m in Sources */,
 				4FE6E5191E6515A200AB34A3 /* TZTestCell.m in Sources */,
+				4FE7BB3A1E8BB8470090B679 /* MAImageViewTool.m in Sources */,
 				4FECBBB01E60185600A8C675 /* InformationViewController.m in Sources */,
 				4FECBBB51E60185600A8C675 /* ZuoyeViewController.m in Sources */,
-				4FCE2E191E64064B0051F625 /* NSString+MD5.m in Sources */,
 				4FECBB8C1E6016FE00A8C675 /* ColorTools.m in Sources */,
 				4FE4DE4D1E8A65970046F0D2 /* AssetHeaderCollectionReusableView.m in Sources */,
 				4F9D074E1E6E96B4004C5C97 /* LoadMoreCollectionViewCell.m in Sources */,
