@@ -15,7 +15,7 @@
 
 @end
 
-typedef void(^AlertResult)(NSInteger index);
+typedef void(^AlertResult)(NSInteger index, id object);
 
 @interface CustomePopView : UIView
 

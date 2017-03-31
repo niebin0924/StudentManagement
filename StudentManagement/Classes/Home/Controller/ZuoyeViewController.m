@@ -178,6 +178,7 @@
     MessageList *modal = self.dataArray[indexPath.row-1];
     cell.timeLabel.text = modal.time;
     cell.teacherLabel.text = modal.teacherName;
+    cell.homeworkLabel.text = modal.homeworkName;
     // 0:未查看，1已查看，2已批注
     if ([modal.state isEqual:@0]) {
         cell.stateLabel.text = @"未查看";

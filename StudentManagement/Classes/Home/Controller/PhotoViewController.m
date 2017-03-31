@@ -9,7 +9,6 @@
 #import "PhotoViewController.h"
 #import "PhotoCollectionViewCell.h"
 #import "LoadMoreCollectionViewCell.h"
-#import "NBAblumTool.h"
 #import "Homework.h"
 #import <Photos/Photos.h>
 
@@ -47,11 +46,11 @@
     
     [self initCollectionView];
     
-    PHAssetCollection *collection = self.ablumList.assetCollection;
-    NSArray<PHAsset *> *assets = [[NBAblumTool sharePhotoTool] getAssetsInAssetCollection:collection ascending:NO];
-    [self addModelData:assets Original:YES];
+//    PHAssetCollection *collection = self.ablumList.assetCollection;
+//    NSArray<PHAsset *> *assets = [[NBAblumTool sharePhotoTool] getAssetsInAssetCollection:collection ascending:NO];
+//    [self addModelData:assets Original:YES];
     
-    [self loadMore];
+//    [self loadMore];
 }
 
 - (void)initData

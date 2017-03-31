@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-@class NBPhotoPickerGroup;
+#import "NBPhotoPickerGroup.h"
 
 // 回调
 typedef void(^groupCallBackBlock)(id obj);
 
 @interface NBPhotoPickerDatas : NSObject
 
+@property (nonatomic,strong) ALAssetsLibrary *library;
 
 /**
  *  获取所有组

@@ -14,7 +14,7 @@
 // 各个栏目之间的距离
 #define Space 15.0
 
-@interface CustomePopView () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate>
+@interface CustomePopView () <UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UITextFieldDelegate>
 
 @property(nonatomic,retain) UIControl *control;
 /** 弹窗 */
@@ -223,6 +223,7 @@
     self.textField.layer.borderColor = [[UIColor colorWithRed:197/255.0 green:197/255.0 blue:197/255.0 alpha:1] CGColor];
     self.textField.leftViewMode = UITextFieldViewModeAlways;
     self.textField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    self.textField.delegate = self;
     
     if (configurationHandler) {
         configurationHandler(_textField);
@@ -370,13 +371,20 @@
     [pan setTranslation:CGPointZero inView:self];
 }
 
+#pragma mark - UITextFieldDelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.textField = textField;
+}
+
 #pragma mark - 回调 只设置2 -- > 确定才回调
 - (void)buttonEvent:(UIButton *)sender
 {
     if (sender.tag == 2) {
         if (self.resultIndex) {
-            self.resultIndex(sender.tag);
+            self.resultIndex(sender.tag,self.textField);
         }
+       
     }
     [self removeFromSuperview];
 }

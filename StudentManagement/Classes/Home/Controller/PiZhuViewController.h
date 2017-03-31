@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+@class Mark;
 
-typedef void(^ReturnPathUrl)(NSString *, NSString *);
+typedef void(^ReturnMarkBlock)(Mark *);
 
 @interface PiZhuViewController : UIViewController
 
-@property (nonatomic,copy) ReturnPathUrl pathBlock;
+@property (nonatomic,copy) ReturnMarkBlock markBlock;
+@property (nonatomic,strong) Mark *mark;
 
 @end

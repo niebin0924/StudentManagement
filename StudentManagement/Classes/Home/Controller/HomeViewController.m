@@ -26,15 +26,15 @@
 #import "KNPhotoBrower.h"
 #import "DACircularProgressView.h"
 #import "MAImageViewTool.h"
+#import "Reachability.h"
 
-
-@interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,KNPhotoBrowerDelegate>
+@interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,CustomeAlertViewWithCollectionDelegate,KNPhotoBrowerDelegate>
 {
-    NSInteger _currPage;
     NSString *_subjectId;
     NSString *_homeworkId;
     NSInteger _openedIndex;//当前工作区展示的下标
     BOOL _isUpdate;//是否是更新作业
+    NSInteger _startPizhuCount;//当前工作区最开始的批注个数
     NSInteger _pizhuIndex;//点击的是哪一个批注label
 }
 
@@ -66,6 +66,7 @@
 @property (nonatomic,strong) NSMutableArray *pathArray;
 // 保存批注的数组
 @property (nonatomic,strong) NSMutableArray <Mark *>*pizhuArray;
+@property (nonatomic,strong) NSMutableArray <Mark *>*updatePizhuArray;
 // 保存批注的个数
 @property (nonatomic,strong) NSMutableArray *pizhuCountArray;
 
@@ -94,7 +95,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = KblackgroundColor;
     self.title = @"主页";
-    _currPage = 1;
+    
     _openedIndex = 0;
     _pizhuIndex = -1;
     
@@ -137,6 +138,15 @@
         _pizhuArray = [NSMutableArray array];
     }
     return _pizhuArray;
+}
+
+- (NSMutableArray<Mark *> *)updatePizhuArray
+{
+    if (!_updatePizhuArray) {
+        _updatePizhuArray = [NSMutableArray array];
+    }
+    
+    return _updatePizhuArray;
 }
 
 - (NSMutableArray *)pizhuCountArray
@@ -182,6 +192,7 @@
         }
         
         self.openImageArray = result;
+        
         // 初始化批注个数
         if (self.pizhuCountArray && self.pizhuCountArray.count > 0) {
             [self.pizhuCountArray removeAllObjects];
@@ -195,18 +206,25 @@
                 [self.pizhuCountArray addObject:@1];
             }
             // 初始化pathArray
-            [self.pathArray addObject:[NSNull null]];
+//            [self.pathArray addObject:[NSNull null]];
         }
         // 初始化展示给用户的首页图片
         _openedIndex = 0;
         [self addImgViewInBgScrollView];
     }
     
+    
+    Homework *model = self.openImageArray[_openedIndex];
     if (userInfo != nil) {
         // 代表是打开的作业
         _isUpdate = YES;
+        self.pizhuArray = [model.pizhuArray mutableCopy];
+        _startPizhuCount = self.pizhuArray.count;
+        
         [self addPizhuDot];
         [self addBottomPizhuViewWithHomework:self.openImageArray[_openedIndex]];
+    }else{
+        _startPizhuCount = 0;
     }
 }
 
@@ -277,12 +295,18 @@
         [imgView addSubview:pizhuBtn];
         
         model = [[Mark alloc] init];
+        
+        if (_isUpdate) {
+            [self.updatePizhuArray addObject:model];
+        }
         [self.pizhuArray addObject:model];
+        
     }
     
     pizhuBtn.frame = CGRectMake(point.x, point.y, 20, 20);
     model.x = point.x;
     model.y = point.y;
+    
 }
 
 - (void)addPizhuDot
@@ -397,7 +421,7 @@
     _pizhuIndex = index;
     CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"批注" message:mark.content sureBtn:@"关闭" cancleBtn:nil];
     alertView.delegate = self;
-    alertView.resultIndex = ^(NSInteger index)
+    alertView.resultIndex = ^(NSInteger index, id object)
     {
         // 回调 -- 处理
         //        NSLog(@"%s",__func__);
@@ -454,7 +478,7 @@
 #pragma mark - initView
 - (void)initMenuView
 {
-    NSArray *arr = @[@"导入",@"裁切",@"批注",@"打开",@"删除",@"作业",@"消息",@"我的",@"导出",@"上传"];
+    NSArray *arr = @[@"导入",@"裁切",@"批注",@"打开",@"删除",@"作业",@"消息",@"我的",@"本地",@"上传"];
     NSArray *imgNames = @[@"icon_import",@"icon_crop",@"icon_postil",@"icon_open",@"icon_delete",@"icon_job",@"icon_message",@"icon_user",@"icon_out",@"icon_upload"];
     
     UIView *menuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 44)];
@@ -617,9 +641,11 @@
         self.openedImgView = [self.bgScrollView viewWithTag:10+index-1];
         _openedIndex = index - 1;
         [self addBottomPizhuViewWithHomework:self.openImageArray[_openedIndex]];
+        
+        Homework *model = self.openImageArray[_openedIndex];
+        self.pizhuArray = [model.pizhuArray mutableCopy];
     }
-    
-    
+
 }
 
 // 下一张作业
@@ -636,6 +662,9 @@
         self.openedImgView = [self.bgScrollView viewWithTag:10+index+1];
         _openedIndex = index + 1;
         [self addBottomPizhuViewWithHomework:self.openImageArray[_openedIndex]];
+        
+        Homework *model = self.openImageArray[_openedIndex];
+        self.pizhuArray = [model.pizhuArray mutableCopy];
     }
 }
 
@@ -865,12 +894,14 @@
     if (pizhuBtn != nil) {
         typeof(self) __weak weakSelf = self;
         PiZhuViewController *vc = [[PiZhuViewController alloc] init];
-        vc.pathBlock = ^ (NSString *paths, NSString *text){
+        vc.mark = self.pizhuArray[[numberCount integerValue]-1];
+        vc.markBlock = ^ (Mark *mark){
             
-            [weakSelf.pathArray replaceObjectAtIndex:_openedIndex withObject:[NSMutableArray arrayWithObject:paths]];
-            NSMutableArray *arr = [self.pizhuArray mutableCopy];
-            Mark *model = arr[[numberCount integerValue]-1];
-            model.content = text;
+//            [weakSelf.pathArray replaceObjectAtIndex:_openedIndex withObject:[NSMutableArray arrayWithObject:paths]];
+//            NSMutableArray *arr = [self.pizhuArray mutableCopy];
+//            Mark *model = arr[[numberCount integerValue]-1];
+//            model.content = text;
+            weakSelf.pizhuArray[[numberCount integerValue]-1] = mark;
             
             // 第一个批注完成，进入下一个批注
             NSInteger count = [numberCount integerValue];
@@ -912,7 +943,7 @@
             return;
         }
         CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"删除" message:@"确定要删除该图片及其批注?" sureBtn:@"删除" cancleBtn:@"取消"];
-        alertView.resultIndex = ^(NSInteger index)
+        alertView.resultIndex = ^(NSInteger index, id object)
         {
             // 回调 -- 处理
             //        NSLog(@"%s",__func__);
@@ -924,7 +955,7 @@
 
 }
 
-#pragma mark - 导出
+#pragma mark - 导出到本地
 - (void)saveWorkToLocal
 {
     // 如果工作区有图片,导出到本地
@@ -932,16 +963,21 @@
 //        UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
         
         CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出到本地" message:nil sureBtn:@"确定" cancleBtn:@"取消"];
-        alertView.resultIndex = ^(NSInteger index)
-        {
-            NSLog(@"%s",__func__);
-            [self saveWork];
-            
-        };
         [alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-           textField.placeholder = @"请输入作业名";
+            textField.placeholder = @"请输入作业名";
         }];
         [alertView showPopView];
+        
+        alertView.resultIndex = ^(NSInteger index, UITextField *textField)
+        {
+            if (textField && [textField.text isEqualToString:@""]) {
+                [SVProgressHUD showErrorWithStatus:@"请输入作业名"];
+            }else{
+                [self saveWork];
+            }
+        };
+        
+        
     }
 }
 
@@ -974,8 +1010,27 @@
         return;
     }
     if (self.openedImgView != nil) {
-        [self uploadImage];
+        
+        self.subjectsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
+        
+        CustomeAlertViewWithCollection *alertView = [[CustomeAlertViewWithCollection alloc] initWithTitle:@"上传" collectionCellName:@"FolderCollectionViewCell" sureBtn:@"确定" cancleBtn:@"取消"];
+        alertView.datasource = self;
+        alertView.delegate = self;
+        alertView.indexDelegate = self;
+        [alertView show];
     }
+}
+
+#pragma mark CustomeAlertViewWithCollectionDelegate
+- (void)CustomeAlertViewWithCollection:(NSIndexPath *)indexpath
+{
+    if (![[Reachability reachabilityForInternetConnection] isReachable]) {
+        [SVProgressHUD showErrorWithStatus:@"请连接网络"];
+        return;
+    }
+    SubjectInfo *modal = self.subjectsArray[indexpath.item];
+    _subjectId = modal.subjectId;
+    [self uploadImage];
 }
 
 #pragma mark - request
@@ -1051,84 +1106,81 @@
 // 先上传图片
 - (void)uploadImage
 {
-    self.subjectsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
-   
-    CustomeAlertViewWithCollection *alertView = [[CustomeAlertViewWithCollection alloc] initWithTitle:@"上传" collectionCellName:@"FolderCollectionViewCell" sureBtn:@"确定" cancleBtn:@"取消"];
-    alertView.datasource = self;
-    alertView.delegate = self;
-    [alertView show];
-    alertView.resultIndexpath = ^(NSIndexPath *indexpath){
-        
-        SubjectInfo *modal = self.subjectsArray[indexpath.item];
-        _subjectId = modal.subjectId;
-        
-//        [self runDispatch];
-        
-        NSString *url = @"students/img/uploads_img/state/bylf";
-        NSDictionary *parameters = @{@"students_id":[[AppDefaultUtil sharedInstance] getStudentId]};
-        
-        NSArray *images = [self images];//二维数组
-        
-        // 准备保存结果的数组，元素个数与上传的图片个数相同，先用 NSNull 占位
-        NSMutableArray *result = [NSMutableArray array];
-        for (NSArray *arr in images) {
-            NSMutableArray *aaa = [NSMutableArray array];
-            for (UIImage *image in arr) {
-                [aaa addObject:[NSNull null]];
-                NSLog(@"image:%@",image);
-            }
-            [result addObject:aaa];
+    //        [self runDispatch];
+    
+    NSString *url = @"students/img/uploads_img/state/bylf";
+    NSDictionary *parameters = @{@"students_id":[[AppDefaultUtil sharedInstance] getStudentId]};
+    
+    NSArray *images = [self images];
+    
+    // 准备保存结果的数组，元素个数与上传的图片个数相同，先用 NSNull 占位
+    NSMutableArray *result = [NSMutableArray array];
+    for (NSArray *arr in images) {
+        NSMutableArray *aaa = [NSMutableArray array];
+        for (UIImage *image in arr) {
+            [aaa addObject:[NSNull null]];
+            NSLog(@"image:%@",image);
         }
+        [result addObject:aaa];
+    }
+    
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    for (NSInteger i = 0; i < images.count; i++) {
         
-        
-        dispatch_group_t group = dispatch_group_create();
-        
-        for (NSInteger i = 0; i < images.count; i++) {
+        NSArray *array = images[i];
+        for (NSInteger j=0; j<array.count; j++) {
             
-            NSArray *array = images[i];
-            for (NSInteger j=0; j<array.count; j++) {
+            dispatch_group_enter(group);
+            
+            NetWork *network = [[NetWork alloc] init];
+            [network uploadImage:array[j] WithUrl:url WithBlock:parameters blok:^(NSData *data, NSError *error) {
                 
-                dispatch_group_enter(group);
-                
-                NetWork *network = [[NetWork alloc] init];
-                [network uploadImage:array[j] WithUrl:url WithBlock:parameters blok:^(NSData *data, NSError *error) {
-                    
-                    if (error) {
-                        NSLog(@"第 [%d][%d] 张图片上传失败: %@", (int)i + 1,(int)j + 1, error);
-                        dispatch_group_leave(group);
-                    } else {
-                        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-                        NSLog(@"第 [%d][%d] 张图片上传成功: %@", (int)i + 1,(int)j + 1, dict);
-                        @synchronized (result) { // NSMutableArray 是线程不安全的，所以加个同步锁
-                            result[i][j] = dict;
-                        }
-                        dispatch_group_leave(group);
+                if (error) {
+                    NSLog(@"第 [%d][%d] 张图片上传失败: %@", (int)i + 1,(int)j + 1, error);
+                    dispatch_group_leave(group);
+                } else {
+                    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+                    NSLog(@"第 [%d][%d] 张图片上传成功: %@", (int)i + 1,(int)j + 1, dict);
+                    @synchronized (result) { // NSMutableArray 是线程不安全的，所以加个同步锁
+                        result[i][j] = dict;
                     }
-                    
-                }];
-            }
-            
+                    dispatch_group_leave(group);
+                }
+                
+            }];
         }
         
-        NSMutableArray *imageUrls = [NSMutableArray array];
-        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            NSLog(@"上传完成!");
-            for (NSArray *arr in result) {
-                NSMutableArray *secends = [NSMutableArray array];
-                for (NSDictionary *response in arr) {
-                    NSLog(@"response:%@", response);
-                    NSString *imgUrl = [response objectForKey:@"content"];
-                    [secends addObject:imgUrl];
-                }
-                [imageUrls addObject:secends];
+    }
+    
+    NSMutableArray *imageUrls = [NSMutableArray array];
+    if (_isUpdate) {
+        Homework *model = self.openImageArray[_openedIndex];
+        if ([model.imageUrlStr rangeOfString:@"http"].location == NSNotFound) {
+            model.imageUrlStr = [BaseURL stringByAppendingString:model.imageUrlStr];
+        }
+        NSMutableArray *aaa = [NSMutableArray arrayWithObjects:model.imageUrlStr, nil];
+        [imageUrls addObject:aaa];
+    }
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        NSLog(@"上传完成!");
+        for (NSArray *arr in result) {
+            NSMutableArray *secends = [NSMutableArray array];
+            for (NSDictionary *response in arr) {
+                NSLog(@"response:%@", response);
+                NSString *imgUrl = [response objectForKey:@"content"];
+                [secends addObject:imgUrl];
             }
-            
-            
-            // 上传图片完成之后,先提交json数据
-            [self uploadToServer:imageUrls];
-            
-        });
-    };
+            [imageUrls addObject:secends];
+        }
+        
+        
+        // 上传图片完成之后,先提交json数据
+        [self uploadToServer:imageUrls];
+        
+    });
+    
     
     
     
@@ -1142,7 +1194,7 @@
     NSMutableArray *dictArr = [NSMutableArray array];
     for (NSInteger i=1; i<imageUrls.count; i++) {
         NSArray *content_img = imageUrls[i];
-        Mark *model = arr[i-1];
+        Mark *model = arr[i-1+_startPizhuCount];
         model.content_img = content_img;
         [dictArr addObject:[model TurnToDict]];
     }
@@ -1170,8 +1222,8 @@
                 
                 [SVProgressHUD showSuccessWithStatus:@"上传成功"];
                 [self.pizhuCountArray removeObjectAtIndex:_openedIndex];
-                [self deletSandboxImages];
-                [self.pathArray removeObjectAtIndex:_openedIndex];
+//                [self deletSandboxImages];
+//                [self.pathArray removeObjectAtIndex:_openedIndex];
                 [self updateBgScrollViewData];
                 
                 
@@ -1342,6 +1394,31 @@
 - (NSArray *)images
 {
     NSMutableArray *array = [NSMutableArray array];
+    if (!_isUpdate) {
+        // 首页作业图片
+        NSMutableArray *aaa = [NSMutableArray arrayWithObjects:self.openedImgView.image, nil];
+        [array addObject:aaa];
+    }
+    
+    
+    for (NSInteger i=_startPizhuCount; i<self.pizhuArray.count; i++) {
+        
+        Mark *mark = self.pizhuArray[i];
+        NSMutableArray *seconds = [mark.images copy];
+//        for (NSString *str in mark.content_img) {
+        
+//            [[NBPhotoPickerDatas defaultPicker] getAssetsPhotoWithURLs:[NSURL URLWithString:str] callBack:^(UIImage *obj) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [seconds addObject:obj];
+//                });
+//                
+//            }];
+//        }
+        [array addObject:seconds];
+    }
+    
+    /*
+    NSMutableArray *array = [NSMutableArray array];
     // self.openedImgView.image
     NSMutableArray *aaa = [NSMutableArray arrayWithObjects:self.openedImgView.image, nil];
     [array addObject:aaa];
@@ -1359,20 +1436,8 @@
         }
         [array addObject:seconds];
     }
+     */
     
-//    for (NSMutableArray *imagePaths in self.pathArray) {//批注个数
-//        
-//        NSMutableArray *seconds = [NSMutableArray array];
-//        for (NSString *imagePath in imagePaths) {//每个批注上传的图片
-//            // 读取沙盒路径图片
-//            NSString *path=[NSString stringWithFormat:@"%@%@",NSHomeDirectory(),imagePath];
-//            // 拿到沙盒路径图片
-//            UIImage *image = [[UIImage alloc]initWithContentsOfFile:path];
-//            [seconds addObject:image];
-//        }
-//        [array addObject:seconds];
-//    }
-
     return array;
 }
 
@@ -1564,6 +1629,7 @@
     
     self.pathArray = nil;
     self.pizhuArray = nil;
+    self.updatePizhuArray = nil;
     self.pizhuCountArray = nil;
     
     self.itemsArr = nil;
@@ -1580,6 +1646,7 @@
     
     self.pathArray = nil;
     self.pizhuArray = nil;
+    self.updatePizhuArray = nil;
     self.pizhuCountArray = nil;
     
     self.itemsArr = nil;

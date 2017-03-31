@@ -7,12 +7,11 @@
 //
 
 #import "NBPhotoPickerDatas.h"
-#import "NBPhotoPickerGroup.h"
 
 @interface NBPhotoPickerDatas ()
 
 
-@property (nonatomic,strong) ALAssetsLibrary *library;
+
 
 @end
 

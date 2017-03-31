@@ -8,7 +8,6 @@
 
 #import "ImportFolderViewController.h"
 #import "FolderCollectionViewCell.h"
-#import "CustomePopView.h"
 
 @interface ImportFolderViewController () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 {

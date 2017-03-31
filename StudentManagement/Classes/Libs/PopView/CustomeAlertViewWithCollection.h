@@ -27,15 +27,23 @@
 
 @end
 
+@protocol CustomeAlertViewWithCollectionDelegate <NSObject>
+
+- (void)CustomeAlertViewWithCollection:(NSIndexPath *)indexpath;
+
+@end
+
 typedef void(^AlertResultIndexPath)(NSIndexPath *indexpath);
 
 @interface CustomeAlertViewWithCollection : UIView
 
 @property(nonatomic,copy) AlertResultIndexPath resultIndexpath;
 
-@property (nonatomic, strong) id <CustomeAlertViewDataSource> datasource;
+@property (nonatomic, weak) id <CustomeAlertViewDataSource> datasource;
 
 @property (nonatomic, weak) id <CustomeAlertViewDelegate> delegate;
+
+@property (nonatomic, weak) id <CustomeAlertViewWithCollectionDelegate> indexDelegate;
 
 @property(nonatomic,strong) NSArray *dataArray;
 

@@ -44,8 +44,10 @@
         objc_property_t property = properties[i];
         const char* char_f =property_getName(property);
         NSString *propertyName = [NSString stringWithUTF8String:char_f];
-        id propertyValue = [self valueForKey:(NSString *)propertyName];
-        if (propertyValue) [dict setObject:propertyValue forKey:propertyName];
+        if (![propertyName isEqualToString:@"images"]){
+            id propertyValue = [self valueForKey:(NSString *)propertyName];
+            if (propertyValue) [dict setObject:propertyValue forKey:propertyName];
+        }
     }
     free(properties);
     return dict;

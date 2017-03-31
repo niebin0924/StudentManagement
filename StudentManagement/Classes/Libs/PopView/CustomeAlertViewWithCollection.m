@@ -297,9 +297,14 @@
 - (void)buttonEvent:(UIButton *)sender
 {
     if (sender.tag == 2) {
-        if (self.resultIndexpath) {
-            self.resultIndexpath(self.selIndexPath);
+//        if (self.resultIndexpath) {
+//            self.resultIndexpath(self.selIndexPath);
+//        }
+        
+        if (self.indexDelegate && [self.indexDelegate respondsToSelector:@selector(CustomeAlertViewWithCollection:)]) {
+            [self.indexDelegate CustomeAlertViewWithCollection:self.selIndexPath];
         }
+        
     }
     [self removeFromSuperview];
 }

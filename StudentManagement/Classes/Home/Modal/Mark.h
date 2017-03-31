@@ -15,6 +15,8 @@
 @property (nonatomic,copy) NSString *content;
 // 存储多张图片的url
 @property (nonatomic,copy) NSArray<NSString *> *content_img;
+// 存储多张图片image
+@property (nonatomic,copy) NSArray<UIImage *> *images;
 
 - (NSDictionary *)TurnToDict;
 
