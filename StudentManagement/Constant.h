@@ -11,7 +11,8 @@
 
 #define BaseURL                     @"http://ebj.zhi-watch.com"
 #define OpenHomeworkNotification    @"openHomework"
-#define SubjectFileName             [NSHomeDirectory() stringByAppendingString:@"/Documents/subject.src"]
+#define SubjectFileName             [NSHomeDirectory() stringByAppendingString:@"/Documents/subject"]
+#define DocumentsPath               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
 
 #define SCREENWIDTH  [UIScreen mainScreen].bounds.size.width
 #define SCREENHEIGHT [UIScreen mainScreen].bounds.size.height

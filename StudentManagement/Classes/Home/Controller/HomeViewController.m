@@ -8,6 +8,7 @@
 
 
 #import "HomeViewController.h"
+#import "LocalHomeworkViewController.h"
 #import "PhotoGroupViewController.h"
 #import "SubjectFolderViewController.h"
 #import "PiZhuViewController.h"
@@ -27,6 +28,7 @@
 #import "DACircularProgressView.h"
 #import "MAImageViewTool.h"
 #import "Reachability.h"
+#import "NBPhotoPickerDatas.h"
 
 @interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,CustomeAlertViewWithCollectionDelegate,KNPhotoBrowerDelegate>
 {
@@ -66,7 +68,7 @@
 @property (nonatomic,strong) NSMutableArray *pathArray;
 // 保存批注的数组
 @property (nonatomic,strong) NSMutableArray <Mark *>*pizhuArray;
-@property (nonatomic,strong) NSMutableArray <Mark *>*updatePizhuArray;
+
 // 保存批注的个数
 @property (nonatomic,strong) NSMutableArray *pizhuCountArray;
 
@@ -140,15 +142,6 @@
     return _pizhuArray;
 }
 
-- (NSMutableArray<Mark *> *)updatePizhuArray
-{
-    if (!_updatePizhuArray) {
-        _updatePizhuArray = [NSMutableArray array];
-    }
-    
-    return _updatePizhuArray;
-}
-
 - (NSMutableArray *)pizhuCountArray
 {
     if (!_pizhuCountArray) {
@@ -216,7 +209,7 @@
     
     Homework *model = self.openImageArray[_openedIndex];
     if (userInfo != nil) {
-        // 代表是打开的作业
+        // 代表是有批注的
         _isUpdate = YES;
         self.pizhuArray = [model.pizhuArray mutableCopy];
         _startPizhuCount = self.pizhuArray.count;
@@ -252,7 +245,7 @@
         if ([object isKindOfClass:[Homework class]]) {
             // 打开
             Homework *modal = object;
-            if ([modal.imageUrlStr isEqualToString:@""]) {
+            if ([modal.imageUrlStr isEqualToString:@""] || (modal.assetURL && ![modal.assetURL isEqualToString:@""])) {
                 // 从相册读取
                 imgView.image = modal.img;
             }else{
@@ -295,10 +288,6 @@
         [imgView addSubview:pizhuBtn];
         
         model = [[Mark alloc] init];
-        
-        if (_isUpdate) {
-            [self.updatePizhuArray addObject:model];
-        }
         [self.pizhuArray addObject:model];
         
     }
@@ -450,7 +439,16 @@
         PopImageCollectionViewCell *cell = (PopImageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
         
         KNPhotoItems *items = [[KNPhotoItems alloc] init];
-        items.url = urlStr;
+        if ([urlStr rangeOfString:@"assets-library"].location != NSNotFound) {
+            
+            [[NBPhotoPickerDatas defaultPicker] getAssetsPhotoWithURLs:[NSURL URLWithString:urlStr] callBack:^(UIImage *image) {
+                items.sourceImage = image;
+            }];
+            
+        }else{
+            items.url = urlStr;
+        }
+        
         items.sourceView = cell.iconImageView;
         [self.itemsArr addObject:items];
     }
@@ -671,12 +669,18 @@
 // 上一个批注
 - (void)leftClick
 {
+    if (self.pizhuScrollView.width < self.pizhuScrollView.contentSize.width) {
+        [self.pizhuScrollView setContentOffset:CGPointMake(self.pizhuScrollView.contentOffset.x-70, 0) animated:YES];
+    }
     
 }
 
 // 下一个批注
 - (void)rightClick
 {
+    if (self.pizhuScrollView.width < self.pizhuScrollView.contentSize.width) {
+        [self.pizhuScrollView setContentOffset:CGPointMake(self.pizhuScrollView.contentOffset.x+70, 0) animated:YES];
+    }
     
 }
 
@@ -796,6 +800,18 @@
         
     }else{
         // 本地
+        NSMutableArray *fileArr = [NSMutableArray array];
+        NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
+        for (NSString *file in files) {
+            if ([file hasSuffix:@"src"]) {
+                [fileArr addObject:file];
+            }
+        }
+        LocalHomeworkViewController *vc = [[LocalHomeworkViewController alloc] init];
+        vc.fileArray = fileArr;
+        [self.navigationController pushViewController:vc animated:YES];
+        
         
     }
 }
@@ -973,7 +989,7 @@
             if (textField && [textField.text isEqualToString:@""]) {
                 [SVProgressHUD showErrorWithStatus:@"请输入作业名"];
             }else{
-                [self saveWork];
+                [self saveWork:textField.text];
             }
         };
         
@@ -981,10 +997,31 @@
     }
 }
 
-- (void)saveWork
+- (void)saveWork:(NSString *)homeworkName
 {
-    Homework *model = self.openImageArray[_openedIndex];
+    NSMutableArray *copyArr = [self.openImageArray mutableCopy];
+    Homework *model = copyArr[_openedIndex];
+    model.homeworkName = homeworkName;
+    model.pizhuArray = [self.pizhuArray copy];
     NSLog(@"%@ mark:%@",model,model.pizhuArray);
+//    self.openImageArray = copyArr;
+    
+    // 归档
+    NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.src",model.homeworkName]];
+   
+    BOOL ret = [NSKeyedArchiver archiveRootObject:model toFile:filePath];
+    if (ret) {
+        NSLog(@"作业归档成功");
+    }else {
+        NSLog(@"作业归档失败");
+    }
+    
+    /*
+    // 解档
+    Homework *work = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+    NSLog(@"%@ mark:%@",work,work.pizhuArray);
+     */
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
@@ -1629,7 +1666,6 @@
     
     self.pathArray = nil;
     self.pizhuArray = nil;
-    self.updatePizhuArray = nil;
     self.pizhuCountArray = nil;
     
     self.itemsArr = nil;
@@ -1646,7 +1682,6 @@
     
     self.pathArray = nil;
     self.pizhuArray = nil;
-    self.updatePizhuArray = nil;
     self.pizhuCountArray = nil;
     
     self.itemsArr = nil;

@@ -8,6 +8,7 @@
 
 #import "CustomePopView.h"
 #import "PopImageCollectionViewCell.h"
+#import "NBPhotoPickerDatas.h"
 
 // AlertW 宽
 #define AlertW 400
@@ -406,9 +407,18 @@
     PopImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     NSString *imgName = self.dataArray[indexPath.item];
+    if ([imgName rangeOfString:@"assets-library"].location != NSNotFound) {
+        
+        [[NBPhotoPickerDatas defaultPicker] getAssetsPhotoWithURLs:[NSURL URLWithString:imgName] callBack:^(UIImage *image) {
+            cell.iconImageView.image = image;
+        }];
+        
+    }else{
+        [cell.iconImageView JYloadWebImage:imgName placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+    }
 //    [cell.iconImageView sd_setImageWithURL:[NSURL URLWithString:imgName] placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
     
-    [cell.iconImageView JYloadWebImage:imgName placeholderImage:[UIImage imageNamed:@"KNPhotoBrower.bundle/defaultPlaceHolder"]];
+    
     
     cell.iconImageView.tag = 100 + indexPath.item;
     

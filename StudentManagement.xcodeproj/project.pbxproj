@@ -100,6 +100,7 @@
 		4FE8141A1E6BC18500D95357 /* ZuoyeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FE814191E6BC18500D95357 /* ZuoyeCollectionViewCell.xib */; };
 		4FE8E5B71E72A41800653A30 /* URLSessionWrapperOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE8E5B61E72A41800653A30 /* URLSessionWrapperOperation.m */; };
 		4FE9CF961E694B6C0022AC32 /* ImportFolderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE9CF951E694B6C0022AC32 /* ImportFolderViewController.m */; };
+		4FEA71761E8F7C2000AA5001 /* LocalHomeworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FEA71751E8F7C2000AA5001 /* LocalHomeworkViewController.m */; };
 		4FEADB191E5C1AE1007B9399 /* guide1.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FEADB161E5C1AE1007B9399 /* guide1.png */; };
 		4FEADB1A1E5C1AE1007B9399 /* guide2.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FEADB171E5C1AE1007B9399 /* guide2.png */; };
 		4FEADB1B1E5C1AE1007B9399 /* guide3.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FEADB181E5C1AE1007B9399 /* guide3.png */; };
@@ -338,6 +339,8 @@
 		4FE8E5B61E72A41800653A30 /* URLSessionWrapperOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLSessionWrapperOperation.m; sourceTree = "<group>"; };
 		4FE9CF941E694B6C0022AC32 /* ImportFolderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportFolderViewController.h; sourceTree = "<group>"; };
 		4FE9CF951E694B6C0022AC32 /* ImportFolderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportFolderViewController.m; sourceTree = "<group>"; };
+		4FEA71741E8F7C2000AA5001 /* LocalHomeworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalHomeworkViewController.h; sourceTree = "<group>"; };
+		4FEA71751E8F7C2000AA5001 /* LocalHomeworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalHomeworkViewController.m; sourceTree = "<group>"; };
 		4FEADB161E5C1AE1007B9399 /* guide1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide1.png; sourceTree = "<group>"; };
 		4FEADB171E5C1AE1007B9399 /* guide2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide2.png; sourceTree = "<group>"; };
 		4FEADB181E5C1AE1007B9399 /* guide3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = guide3.png; sourceTree = "<group>"; };
@@ -935,6 +938,8 @@
 				4FE758EB1E8260BE00FF5A61 /* PhotoAssetViewController.m */,
 				4FECBBD31E60219500A8C675 /* PhotoViewController.h */,
 				4FECBBD41E60219500A8C675 /* PhotoViewController.m */,
+				4FEA71741E8F7C2000AA5001 /* LocalHomeworkViewController.h */,
+				4FEA71751E8F7C2000AA5001 /* LocalHomeworkViewController.m */,
 				4FECBBA51E60185600A8C675 /* PiZhuViewController.h */,
 				4FECBBA61E60185600A8C675 /* PiZhuViewController.m */,
 				4FECBBA91E60185600A8C675 /* SubjectFolderViewController.h */,
@@ -1314,6 +1319,7 @@
 				4FE427D41E8E3C500080D06E /* LGPhotoPickerImageView.m in Sources */,
 				4FE427CE1E8E3C500080D06E /* LGPhotoPickerGroupViewController.m in Sources */,
 				4FE7BB331E8BA6B80090B679 /* DACircularProgressView.m in Sources */,
+				4FEA71761E8F7C2000AA5001 /* LocalHomeworkViewController.m in Sources */,
 				4FE427D31E8E3C500080D06E /* LGPhotoPickerGroupTableViewCell.m in Sources */,
 				4FE758EC1E8260BE00FF5A61 /* PhotoAssetViewController.m in Sources */,
 				4FE6E5191E6515A200AB34A3 /* TZTestCell.m in Sources */,
