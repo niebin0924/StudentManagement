@@ -29,6 +29,7 @@
 #import "MAImageViewTool.h"
 #import "Reachability.h"
 #import "NBPhotoPickerDatas.h"
+#import "FileHelper.h"
 
 @interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,CustomeAlertViewWithCollectionDelegate,KNPhotoBrowerDelegate>
 {
@@ -38,6 +39,7 @@
     BOOL _isUpdate;//是否是更新作业
     NSInteger _startPizhuCount;//当前工作区最开始的批注个数
     NSInteger _pizhuIndex;//点击的是哪一个批注label
+    BOOL _isUpload;//是否是上传 0本地 1上传
 }
 
 @property (nonatomic,strong) NSMutableArray *points;
@@ -97,7 +99,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = KblackgroundColor;
     self.title = @"主页";
-    
+    [self createDocumentFolder];
     _openedIndex = 0;
     _pizhuIndex = -1;
     
@@ -106,6 +108,16 @@
     [self initMenuView];
     
     [self initView];
+    
+}
+
+- (void)createDocumentFolder
+{
+    NSArray *arr = @[@"英语",@"语文",@"数学",@"历史",@"物理",@"化学",@"生物",@"重要一",@"重要二",@"考试一",@"考试二",@"易错题集"];
+    NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    for (NSInteger i=0; i<arr.count; i++) {
+        [FileHelper createDir:documentsPath DirStr:arr[i]];
+    }
     
 }
 
@@ -476,7 +488,7 @@
 #pragma mark - initView
 - (void)initMenuView
 {
-    NSArray *arr = @[@"导入",@"裁切",@"批注",@"打开",@"删除",@"作业",@"消息",@"我的",@"本地",@"上传"];
+    NSArray *arr = @[@"导入",@"裁剪",@"批注",@"复习",@"删除",@"作业",@"消息",@"我的",@"保存",@"上传"];
     NSArray *imgNames = @[@"icon_import",@"icon_crop",@"icon_postil",@"icon_open",@"icon_delete",@"icon_job",@"icon_message",@"icon_user",@"icon_out",@"icon_upload"];
     
     UIView *menuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 44)];
@@ -701,12 +713,12 @@
         case 12: // 批注
         {
             [self postil];
-            
         }
             break;
         case 13: // 打开
-            
+        {
             [self openHomework];
+        }
             break;
         case 14: // 删除
         {
@@ -732,17 +744,18 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
-        case 18: // 导出
+        case 18: // 保存本地
         {
-            
+            _isUpload = 0;
             [self saveWorkToLocal];
             
         }
             break;
         case 19: // 上传
-            
+        {
+            _isUpload = 1;
             [self upload];
-            
+        }
             break;
         default:
             break;
@@ -798,18 +811,10 @@
         [self.navigationController pushViewController:vc animated:YES];
         
         
-    }else{
-        // 本地
-        NSMutableArray *fileArr = [NSMutableArray array];
-        NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
-        for (NSString *file in files) {
-            if ([file hasSuffix:@"src"]) {
-                [fileArr addObject:file];
-            }
-        }
-        LocalHomeworkViewController *vc = [[LocalHomeworkViewController alloc] init];
-        vc.fileArray = fileArr;
+    }else if (buttonIndex == 2){
+        
+        SubjectFolderViewController *vc = [[SubjectFolderViewController alloc] init];
+        vc.type = FolderTypeOut;
         [self.navigationController pushViewController:vc animated:YES];
         
         
@@ -978,21 +983,25 @@
     if (self.openedImgView != nil) {
 //        UIImageWriteToSavedPhotosAlbum(self.openedImgView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
         
-        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"导出到本地" message:nil sureBtn:@"确定" cancleBtn:@"取消"];
-        [alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-            textField.placeholder = @"请输入作业名";
-        }];
-        [alertView showPopView];
-        
-        alertView.resultIndex = ^(NSInteger index, UITextField *textField)
-        {
-            if (textField && [textField.text isEqualToString:@""]) {
-                [SVProgressHUD showErrorWithStatus:@"请输入作业名"];
-            }else{
-                [self saveWork:textField.text];
-            }
-        };
-        
+        if (self.subjectsArray && self.subjectsArray.count > 0) {
+            [self.subjectsArray removeAllObjects];
+            [self.subjectCellDict removeAllObjects];
+        }else{
+            self.subjectsArray = [NSMutableArray array];
+        }
+        NSArray *arr = @[@"本地英语",@"本地语文",@"本地数学",@"本地历史",@"本地物理",@"本地化学",@"本地生物",@"重要一",@"重要二",@"考试一",@"考试二",@"易错题集"];
+        for (NSInteger i=0; i<arr.count; i++) {
+            SubjectInfo *model = [[SubjectInfo alloc] init];
+            model.subjectId = [NSString stringWithFormat:@"%zd",i+1];
+            model.subjectName = arr[i];
+            [self.subjectsArray addObject:model];
+        }
+    
+        CustomeAlertViewWithCollection *alertView = [[CustomeAlertViewWithCollection alloc] initWithTitle:@"保存" collectionCellName:@"FolderCollectionViewCell" sureBtn:@"确定" cancleBtn:@"取消"];
+        alertView.datasource = self;
+        alertView.delegate = self;
+        alertView.indexDelegate = self;
+        [alertView show];
         
     }
 }
@@ -1006,8 +1015,35 @@
     NSLog(@"%@ mark:%@",model,model.pizhuArray);
 //    self.openImageArray = copyArr;
     
+    NSString *subjectName;
+    if ([_subjectId isEqualToString:@"1"]) {
+        subjectName = @"英语";
+    }else if ([_subjectId isEqualToString:@"2"]) {
+        subjectName = @"语文";
+    }else if ([_subjectId isEqualToString:@"3"]) {
+        subjectName = @"数学";
+    }else if ([_subjectId isEqualToString:@"4"]) {
+        subjectName = @"历史";
+    }else if ([_subjectId isEqualToString:@"5"]) {
+        subjectName = @"物理";
+    }else if ([_subjectId isEqualToString:@"6"]) {
+        subjectName = @"化学";
+    }else if ([_subjectId isEqualToString:@"7"]) {
+        subjectName = @"生物";
+    }else if ([_subjectId isEqualToString:@"8"]) {
+        subjectName = @"重要一";
+    }else if ([_subjectId isEqualToString:@"9"]) {
+        subjectName = @"重要二";
+    }else if ([_subjectId isEqualToString:@"10"]) {
+        subjectName = @"考试一";
+    }else if ([_subjectId isEqualToString:@"11"]) {
+        subjectName = @"考试二";
+    }else if ([_subjectId isEqualToString:@"12"]) {
+        subjectName = @"易错题集";
+    }
     // 归档
     NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    documentsPath = [documentsPath stringByAppendingPathComponent:subjectName];
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.src",model.homeworkName]];
    
     BOOL ret = [NSKeyedArchiver archiveRootObject:model toFile:filePath];
@@ -1048,6 +1084,10 @@
     }
     if (self.openedImgView != nil) {
         
+        if (self.subjectsArray && self.subjectsArray.count > 0) {
+            [self.subjectsArray removeAllObjects];
+            [self.subjectCellDict removeAllObjects];
+        }
         self.subjectsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
         
         CustomeAlertViewWithCollection *alertView = [[CustomeAlertViewWithCollection alloc] initWithTitle:@"上传" collectionCellName:@"FolderCollectionViewCell" sureBtn:@"确定" cancleBtn:@"取消"];
@@ -1065,9 +1105,34 @@
         [SVProgressHUD showErrorWithStatus:@"请连接网络"];
         return;
     }
+    if (indexpath == nil) {
+        return;
+    }
+    
     SubjectInfo *modal = self.subjectsArray[indexpath.item];
     _subjectId = modal.subjectId;
-    [self uploadImage];
+    if (_isUpload) {
+        
+        [self uploadImage];
+        
+    }else{
+        CustomePopView *alertView = [[CustomePopView alloc] initWithTitle:@"保存到本地" message:nil sureBtn:@"确定" cancleBtn:@"取消"];
+        [alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"请输入作业名";
+        }];
+        [alertView showPopView];
+        
+        alertView.resultIndex = ^(NSInteger index, UITextField *textField)
+        {
+            if (textField && [textField.text isEqualToString:@""]) {
+                [SVProgressHUD showErrorWithStatus:@"请输入作业名"];
+            }else{
+                [self saveWork:textField.text];
+            }
+        };
+    }
+    
+    
 }
 
 #pragma mark - request

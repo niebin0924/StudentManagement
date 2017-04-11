@@ -79,6 +79,7 @@
 - (void)loadData
 {
     NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    documentsPath = [documentsPath stringByAppendingPathComponent:self.subjectName];
     for (NSString *file in self.fileArray) {
         NSString *filePath = [documentsPath stringByAppendingPathComponent:file];
         Homework *work = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];

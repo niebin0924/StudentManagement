@@ -42,7 +42,7 @@ static FileHelper *shareInstance = nil;
 // 创建文件夹
 + (BOOL)createDir:(NSString *)documentsPath DirStr:(NSString *)dir
 {
-    NSString *directryPath = [documentsPath stringByAppendingString:dir];
+    NSString *directryPath = [documentsPath stringByAppendingPathComponent:dir];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir = NO;

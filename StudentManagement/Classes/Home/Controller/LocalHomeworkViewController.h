@@ -10,6 +10,7 @@
 
 @interface LocalHomeworkViewController : UIViewController
 
+@property (nonatomic,strong) NSString *subjectName;
 @property (nonatomic,strong) NSArray *fileArray;
 
 @end

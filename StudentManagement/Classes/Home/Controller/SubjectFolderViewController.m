@@ -8,6 +8,7 @@
 
 #import "SubjectFolderViewController.h"
 #import "SomeSubjectViewController.h"
+#import "LocalHomeworkViewController.h"
 #import "FolderCollectionViewCell.h"
 
 @interface SubjectFolderViewController () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
@@ -39,13 +40,13 @@
             self.title = @"导入";
             break;
         case FolderTypeOut:
-            self.title = @"导出";
+            self.title = @"保存";
             break;
         case FolderTypeUpload:
             self.title = @"另存为";
             break;
         case FolderTypeOpen:
-            self.title = @"打开";
+            self.title = @"复习";
             break;
         case FolderTypeDelete:
             self.title = @"删除";
@@ -57,7 +58,18 @@
 
 - (void)initData
 {
-    self.dataArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
+    if (self.type == FolderTypeOut) {
+        NSArray *arr = @[@"本地英语",@"本地语文",@"本地数学",@"本地历史",@"本地物理",@"本地化学",@"本地生物",@"重要一",@"重要二",@"考试一",@"考试二",@"易错题集"];
+        self.dataArray = [NSMutableArray array];
+        for (NSInteger i=0; i<arr.count; i++) {
+            SubjectInfo *model = [[SubjectInfo alloc] init];
+            model.subjectId = [NSString stringWithFormat:@"%zd",i+1];
+            model.subjectName = arr[i];
+            [self.dataArray addObject:model];
+        }
+    }else{
+        self.dataArray = [NSKeyedUnarchiver unarchiveObjectWithFile:SubjectFileName];
+    }
 }
 
 - (void)initCollectionView
@@ -96,13 +108,58 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    SubjectInfo *model = self.dataArray[indexPath.item];
+    if (self.type == FolderTypeOut) {
+        NSString *subjectName;
+        if ([model.subjectId isEqualToString:@"1"]) {
+            subjectName = @"英语";
+        }else if ([model.subjectId isEqualToString:@"2"]) {
+            subjectName = @"语文";
+        }else if ([model.subjectId isEqualToString:@"3"]) {
+            subjectName = @"数学";
+        }else if ([model.subjectId isEqualToString:@"4"]) {
+            subjectName = @"历史";
+        }else if ([model.subjectId isEqualToString:@"5"]) {
+            subjectName = @"物理";
+        }else if ([model.subjectId isEqualToString:@"6"]) {
+            subjectName = @"化学";
+        }else if ([model.subjectId isEqualToString:@"7"]) {
+            subjectName = @"生物";
+        }else if ([model.subjectId isEqualToString:@"8"]) {
+            subjectName = @"重要一";
+        }else if ([model.subjectId isEqualToString:@"9"]) {
+            subjectName = @"重要二";
+        }else if ([model.subjectId isEqualToString:@"10"]) {
+            subjectName = @"考试一";
+        }else if ([model.subjectId isEqualToString:@"11"]) {
+            subjectName = @"考试二";
+        }else if ([model.subjectId isEqualToString:@"12"]) {
+            subjectName = @"易错题集";
+        }
+        // 本地
+        NSMutableArray *fileArr = [NSMutableArray array];
+        NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        documentsPath = [documentsPath stringByAppendingPathComponent:subjectName];
+        NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
+        for (NSString *file in files) {
+            if ([file hasSuffix:@"src"]) {
+                [fileArr addObject:file];
+            }
+        }
+        LocalHomeworkViewController *vc = [[LocalHomeworkViewController alloc] init];
+        vc.subjectName = subjectName;
+        vc.fileArray = fileArr;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else{
+        SomeSubjectViewController *vc = [[SomeSubjectViewController alloc] init];
+        vc.folderType = self.type;
+        vc.subjectId = model.subjectId;
+        vc.subjectName = model.subjectName;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
     
-    SubjectInfo *subject = self.dataArray[indexPath.item];
-    SomeSubjectViewController *vc = [[SomeSubjectViewController alloc] init];
-    vc.folderType = self.type;
-    vc.subjectId = subject.subjectId;
-    vc.subjectName = subject.subjectName;
-    [self.navigationController pushViewController:vc animated:YES];
+    
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout

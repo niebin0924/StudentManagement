@@ -19,11 +19,27 @@
 
 typedef enum : NSUInteger {
     FolderTypeImport,
-    FolderTypeOut,
+    FolderTypeOut, // 保存本地
     FolderTypeUpload,
     FolderTypeOpen,
     FolderTypeDelete
 } FolderType;
+
+// 本地科目类型
+typedef enum : NSUInteger {
+    SubjectTypeEnglish = 1,
+    SubjectTypeChinese,
+    SubjectTypeMath,
+    SubjectTypeHistory,
+    SubjectTypePhysical,
+    SubjectTypeChemical,
+    SubjectTypeBiology,
+    SubjectTypeImportantOne,
+    SubjectTypeImportantTwo,
+    SubjectTypeExamOne,
+    SubjectTypeExamTwo,
+    SubjectTypeEastWrong
+} SubjectType;
 
 // block self
 #define WEAKSELF typeof(self) __weak weakSelf = self;
