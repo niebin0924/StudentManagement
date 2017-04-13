@@ -78,8 +78,7 @@
 
 - (void)loadData
 {
-    NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    documentsPath = [documentsPath stringByAppendingPathComponent:self.subjectName];
+    NSString *documentsPath = [DocumentsPath stringByAppendingPathComponent:self.subjectName];
     for (NSString *file in self.fileArray) {
         NSString *filePath = [documentsPath stringByAppendingPathComponent:file];
         Homework *work = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
@@ -99,7 +98,7 @@
         }
     }
     
-    NSDictionary *userInfo = @{@"subjectId":@"-1"};
+    NSDictionary *userInfo = @{@"subjectId":self.subjectId};
     [[NSNotificationCenter defaultCenter] postNotificationName:OpenHomeworkNotification object:self.selectArray userInfo:userInfo];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }

@@ -17,6 +17,8 @@
 @property (nonatomic,copy) NSArray<NSString *> *content_img;
 // 存储多张图片image
 @property (nonatomic,copy) NSArray<UIImage *> *images;
+// 存储多张图片的沙盒路径
+@property (nonatomic,copy) NSArray<NSString *> *path_img;
 
 - (NSDictionary *)TurnToDict;
 

@@ -14,20 +14,24 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - IQKeyboardManager (4.0.8)
+  - CLImageEditor (0.1.8):
+    - CLImageEditor/Core (= 0.1.8)
+  - CLImageEditor/Core (0.1.8)
+  - IQKeyboardManager (4.0.9)
   - Masonry (0.6.4)
   - MJRefresh (3.1.12)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
   - SVProgressHUD (2.1.2)
-  - TZImagePickerController (1.7.8)
+  - TZImagePickerController (1.7.9)
   - YYKit (1.0.9):
     - YYKit/no-arc (= 1.0.9)
   - YYKit/no-arc (1.0.9)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
+  - CLImageEditor
   - IQKeyboardManager
   - Masonry (~> 0.6.3)
   - MJRefresh
@@ -38,14 +42,15 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  IQKeyboardManager: 1a8189fa153bf09044355ee0ad36826f6767e7f7
+  CLImageEditor: 0d4d5a14aa317c097418b05b5736fec4b8a90dcf
+  IQKeyboardManager: 322c7405df3eb5f7e50dede32ea937bf3d4364e0
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
-  TZImagePickerController: 87a138ae5d585225aaa6c8abe2cface0f0ad19dd
+  TZImagePickerController: 0a8ff228d287ebdd7d485e8c42a2a932894f1fba
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: 7bef96b74be6ce0a68a2d28d8ffb5e8aaa1f7af1
+PODFILE CHECKSUM: d52e976d5003b4848f722690722472b5ddb2190d
 
 COCOAPODS: 1.0.0

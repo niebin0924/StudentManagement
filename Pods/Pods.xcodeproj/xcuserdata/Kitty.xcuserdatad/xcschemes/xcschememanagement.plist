@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>CLImageEditor.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>IQKeyboardManager.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,7 +57,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>456D456805100C4C843338FDF54E5619</key>
+		<key>054929AE27131286D824DCE11A732F36</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05B98C63D9A768874F8F1D4EB904472B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0DF397B5D203DC6CEE9B130B03B6CD19</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>23A105A91CF896AD5895E63FA44C6A2F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,17 +82,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>571FEB25D48C5CDD4B16CD95EF8974D2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>70BC44266C6FFE30D2C57129458E070B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>84BFEFCFB7EC28BA333191CBD456B565</key>
+		<key>7D0CC9C201F6C266651FF6CA7268352C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -82,17 +97,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>C7B3A0045F65F5690A5AE6B4EA0D5261</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>D0D0C9D20C43FA94D4C88FBFE2601B8E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E1F797522ACCA02D924466E76D54ADB2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EF2B29210E77E75D63F93D9A71D42890</key>
 		<dict>
 			<key>primary</key>
 			<true/>

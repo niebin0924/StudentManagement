@@ -24,5 +24,6 @@
 @property (nonatomic,assign) BOOL isSel; // 是否被选中
 
 @property (nonatomic,copy) NSString *assetURL; // 作业图片本地URL
+@property (nonatomic,copy) NSString *pathStr; // 图片在沙盒路径
 
 @end

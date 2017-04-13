@@ -17,6 +17,7 @@
     [aCoder encodeFloat:self.y forKey:@"y"];
     [aCoder encodeObject:self.content forKey:@"content"];
     [aCoder encodeObject:self.content_img forKey:@"content_img"];
+    [aCoder encodeObject:self.path_img forKey:@"path_img"];
 }
 
 // 解档
@@ -28,6 +29,7 @@
         self.y = [aDecoder decodeFloatForKey:@"y"];
         self.content = [aDecoder decodeObjectForKey:@"content"];
         self.content_img = [aDecoder decodeObjectForKey:@"content_img"];
+        self.path_img = [aDecoder decodeObjectForKey:@"path_img"];
     }
     
     return self;
@@ -57,6 +59,7 @@
 {
     self.content = nil;
     self.content_img = nil;
+    self.path_img = nil;
 }
 
 @end

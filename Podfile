@@ -10,6 +10,6 @@ pod 'Masonry', '~> 0.6.3'
 pod 'YYKit'
 pod 'TZImagePickerController'
 pod 'IQKeyboardManager'
-
+pod 'CLImageEditor'
 
 end

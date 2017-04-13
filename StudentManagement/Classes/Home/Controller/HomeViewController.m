@@ -11,6 +11,7 @@
 #import "LocalHomeworkViewController.h"
 #import "PhotoGroupViewController.h"
 #import "SubjectFolderViewController.h"
+#import "CaptureViewController.h"
 #import "PiZhuViewController.h"
 #import "ZuoyeViewController.h"
 #import "InformationViewController.h"
@@ -22,7 +23,7 @@
 #import "Homework.h"
 #import "Mark.h"
 #import "URLSessionWrapperOperation.h"
-#import "HXCutPictureViewController.h"
+//#import "HXCutPictureViewController.h"
 #import "PopImageCollectionViewCell.h"
 #import "KNPhotoBrower.h"
 #import "DACircularProgressView.h"
@@ -33,6 +34,9 @@
 
 @interface HomeViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,CustomeAlertViewDataSource,CustomeAlertViewDelegate,CustomePopViewDelegate,CustomeAlertViewWithCollectionDelegate,KNPhotoBrowerDelegate>
 {
+    CGFloat _scaleX;
+    CGFloat _scaleY;
+    
     NSString *_subjectId;
     NSString *_homeworkId;
     NSInteger _openedIndex;//当前工作区展示的下标
@@ -108,15 +112,17 @@
     [self initMenuView];
     
     [self initView];
+    // 1088 * 608
+    _scaleX = 1088.0 / (self.view.width - 160);
+    _scaleY = 608.0 / (self.view.height - 100);
     
 }
 
 - (void)createDocumentFolder
 {
     NSArray *arr = @[@"英语",@"语文",@"数学",@"历史",@"物理",@"化学",@"生物",@"重要一",@"重要二",@"考试一",@"考试二",@"易错题集"];
-    NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     for (NSInteger i=0; i<arr.count; i++) {
-        [FileHelper createDir:documentsPath DirStr:arr[i]];
+        [FileHelper createDir:DocumentsPath DirStr:arr[i]];
     }
     
 }
@@ -231,6 +237,9 @@
     }else{
         _startPizhuCount = 0;
     }
+    
+    
+
 }
 
 - (void)addImgViewInBgScrollView
@@ -257,9 +266,17 @@
         if ([object isKindOfClass:[Homework class]]) {
             // 打开
             Homework *modal = object;
-            if ([modal.imageUrlStr isEqualToString:@""] || (modal.assetURL && ![modal.assetURL isEqualToString:@""])) {
+            if ((modal.pathStr&&![modal.pathStr isEqualToString:@""])) {
+                
+                // 从沙盒中读取图片
+                NSString *path = [DocumentsPath stringByAppendingPathComponent:modal.pathStr];
+                imgView.image = [[UIImage alloc] initWithContentsOfFile:path];
+                
+            }
+            else if ([modal.imageUrlStr isEqualToString:@""] || (modal.assetURL && ![modal.assetURL isEqualToString:@""])) {
                 // 从相册读取
                 imgView.image = modal.img;
+                
             }else{
                 if ([modal.imageUrlStr rangeOfString:@"http"].location != NSNotFound) {
                     
@@ -302,11 +319,13 @@
         model = [[Mark alloc] init];
         [self.pizhuArray addObject:model];
         
+    }else{
+        model = self.pizhuArray[numberCount.integerValue-1];
     }
     
     pizhuBtn.frame = CGRectMake(point.x, point.y, 20, 20);
-    model.x = point.x;
-    model.y = point.y;
+    model.x = point.x * _scaleX;
+    model.y = point.y * _scaleY;
     
 }
 
@@ -320,7 +339,7 @@
         for (NSInteger j=1; j<=pizhu.count; j++) {
             Mark *mark = pizhu[j-1];
             UIButton *pizhuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            pizhuBtn.frame = CGRectMake(mark.x, mark.y, 20, 20);
+            pizhuBtn.frame = CGRectMake(mark.x/_scaleX, mark.y/_scaleY, 20, 20);
             pizhuBtn.tag = 100 + j;
             pizhuBtn.layer.cornerRadius = 10;
             pizhuBtn.layer.masksToBounds = YES;
@@ -429,7 +448,16 @@
         [self clearCache];
     };
     
-    alertView.dataArray = mark.content_img;
+    NSMutableArray *arr = [NSMutableArray array];
+    for (NSInteger i=0; i<mark.path_img.count; i++) {
+        NSString *path = mark.path_img[i];
+        if ([path isEqual:[NSNull null]]) {
+            [arr addObject:mark.content_img[i]];
+        }else{
+            [arr addObject:path];
+        }
+    }
+    alertView.dataArray = arr;
     [alertView addCollectionViewWithConfigurationHandler:^(UICollectionView *collectionView) {
         
     }];
@@ -451,7 +479,16 @@
         PopImageCollectionViewCell *cell = (PopImageCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
         
         KNPhotoItems *items = [[KNPhotoItems alloc] init];
-        if ([urlStr rangeOfString:@"assets-library"].location != NSNotFound) {
+        NSInteger index = [mark.content_img indexOfObject:urlStr];
+        NSString *pathStr = mark.path_img[index];
+        if (![pathStr isEqual:[NSNull null]]) {
+            
+            // 从沙盒中读取图片
+            NSString *path = [DocumentsPath stringByAppendingPathComponent:pathStr];
+            items.sourceImage = [[UIImage alloc] initWithContentsOfFile:path];
+            
+        }
+        else if ([urlStr rangeOfString:@"assets-library"].location != NSNotFound) {
             
             [[NBPhotoPickerDatas defaultPicker] getAssetsPhotoWithURLs:[NSURL URLWithString:urlStr] callBack:^(UIImage *image) {
                 items.sourceImage = image;
@@ -889,15 +926,40 @@
         NSArray *pizhu = model.pizhuArray;
         if (!(pizhu && pizhu.count > 0)) {
             
-            HXCutPictureViewController *vc = [[HXCutPictureViewController alloc] initWithCropImage:self.openedImgView.image  cropSize:self.openedImgView.frame.size title:@"裁剪" isLast:YES];
-            vc.completion = ^(HXCutPictureViewController *vc, UIImage *finishImage) {
-                self.openedImgView.image = finishImage;
+//            HXCutPictureViewController *vc = [[HXCutPictureViewController alloc] initWithCropImage:self.openedImgView.image  cropSize:self.openedImgView.frame.size title:@"裁剪" isLast:YES];
+//            vc.completion = ^(HXCutPictureViewController *vc, UIImage *finishImage) {
+//                self.openedImgView.image = finishImage;
+//            };
+            CaptureViewController *vc = [[CaptureViewController alloc] init];
+            vc.image = self.openedImgView.image;
+            vc.completion = ^(UIImage *editImage) {
+                self.openedImgView.image = editImage;
+                [self saveCaptureImage];
             };
             [self.navigationController pushViewController:vc animated:YES];
             
         }
         
     }
+}
+
+- (void)saveCaptureImage
+{
+    NSString *fileName = [NSString stringWithFormat:@"%@.png",[self getCurrentTimestamp]];
+    [UIImagePNGRepresentation(self.openedImgView.image) writeToFile:[DocumentsPath stringByAppendingPathComponent:fileName] atomically:YES];
+    
+    NSMutableArray *copyArr = [self.openImageArray mutableCopy];
+    Homework *model = copyArr[_openedIndex];
+    model.pathStr = fileName;
+    model.assetURL = @"";
+}
+
+- (NSString *)getCurrentTimestamp
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a = [date timeIntervalSince1970] * 1000;
+    NSString *timeString = [NSString stringWithFormat:@"%0.f", a];//转为字符型
+    return timeString;
 }
 
 #pragma mark - 批注
@@ -1042,13 +1104,14 @@
         subjectName = @"易错题集";
     }
     // 归档
-    NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    documentsPath = [documentsPath stringByAppendingPathComponent:subjectName];
+    NSString *documentsPath = [DocumentsPath stringByAppendingPathComponent:subjectName];
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.src",model.homeworkName]];
    
     BOOL ret = [NSKeyedArchiver archiveRootObject:model toFile:filePath];
     if (ret) {
         NSLog(@"作业归档成功");
+        [self.pizhuCountArray removeObjectAtIndex:_openedIndex];
+        [self updateBgScrollViewData];
     }else {
         NSLog(@"作业归档失败");
     }
@@ -1110,6 +1173,10 @@
     }
     
     SubjectInfo *modal = self.subjectsArray[indexpath.item];
+    if (_subjectId!=nil && ![_subjectId isEqualToString:modal.subjectId]) {
+        [SVProgressHUD showInfoWithStatus:@"请勾选正确的科目"];
+        return;
+    }
     _subjectId = modal.subjectId;
     if (_isUpload) {
         
@@ -1324,8 +1391,6 @@
                 
                 [SVProgressHUD showSuccessWithStatus:@"上传成功"];
                 [self.pizhuCountArray removeObjectAtIndex:_openedIndex];
-//                [self deletSandboxImages];
-//                [self.pathArray removeObjectAtIndex:_openedIndex];
                 [self updateBgScrollViewData];
                 
                 

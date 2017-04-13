@@ -138,8 +138,7 @@
         }
         // 本地
         NSMutableArray *fileArr = [NSMutableArray array];
-        NSString *documentsPath =[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        documentsPath = [documentsPath stringByAppendingPathComponent:subjectName];
+        NSString *documentsPath = [DocumentsPath stringByAppendingPathComponent:subjectName];
         NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentsPath error:nil];
         for (NSString *file in files) {
             if ([file hasSuffix:@"src"]) {
@@ -147,6 +146,7 @@
             }
         }
         LocalHomeworkViewController *vc = [[LocalHomeworkViewController alloc] init];
+        vc.subjectId = model.subjectId;
         vc.subjectName = subjectName;
         vc.fileArray = fileArr;
         [self.navigationController pushViewController:vc animated:YES];

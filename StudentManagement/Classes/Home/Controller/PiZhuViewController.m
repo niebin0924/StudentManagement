@@ -7,6 +7,7 @@
 //
 
 #import "PiZhuViewController.h"
+#import "CaptureViewController.h"
 #import "FEPlaceHolderTextView.h"
 #import "TZTestCell.h"
 #import "Mark.h"
@@ -20,6 +21,8 @@
     
     CGFloat _itemWH;
     CGFloat _margin;
+    
+    NSIndexPath *_selIndexPath;
 }
 
 @property (nonatomic, strong) FEPlaceHolderTextView *textView;
@@ -174,10 +177,42 @@
         [self pushImagePickerController];
         
     } else { // preview photos or video / 预览照片或者视频
-
+        _selIndexPath = indexPath;
+        NSMutableArray *photos = [_selectedPhotos mutableCopy];
+        CaptureViewController *vc = [[CaptureViewController alloc] init];
+        vc.image = _selectedPhotos[indexPath.item];
+        vc.completion = ^(UIImage *editImage) {
+            photos[indexPath.item] = editImage;
+            _selectedPhotos = photos;
+            [self saveCaptureImage];
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+        };
         
+        [self.navigationController pushViewController:vc animated:YES];
        
     }
+}
+
+- (void)saveCaptureImage
+{
+    UIImage *editImage = _selectedPhotos[_selIndexPath.item];
+    NSString *fileName = [NSString stringWithFormat:@"%@.png",[self getCurrentTimestamp]];
+    [UIImagePNGRepresentation(editImage) writeToFile:[DocumentsPath stringByAppendingPathComponent:fileName] atomically:YES];
+    
+    NSMutableArray *copyArr = [NSMutableArray arrayWithCapacity:_selectedPhotos.count];
+    for (UIImage *image in _selectedPhotos) {
+        [copyArr addObject:[NSNull null]];
+    }
+    copyArr[_selIndexPath.item] = fileName;
+    self.mark.path_img = copyArr;
+}
+
+- (NSString *)getCurrentTimestamp
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSTimeInterval a = [date timeIntervalSince1970] * 1000;
+    NSString *timeString = [NSString stringWithFormat:@"%0.f", a];//转为字符型
+    return timeString;
 }
 
 #pragma mark - LxGridViewDataSource

@@ -16,6 +16,7 @@
     [aCoder encodeObject:self.assetURL forKey:@"assetURL"];
     [aCoder encodeObject:self.pizhuArray forKey:@"pizhuArray"];
     [aCoder encodeObject:self.homeworkName forKey:@"homeworkName"];
+    [aCoder encodeObject:self.pathStr forKey:@"pathStr"];
 }
 
 // 解档
@@ -25,6 +26,7 @@
         self.assetURL = [aDecoder decodeObjectForKey:@"assetURL"];
         self.homeworkName = [aDecoder decodeObjectForKey:@"homeworkName"];
         self.pizhuArray = [aDecoder decodeObjectForKey:@"pizhuArray"];
+        self.pathStr = [aDecoder decodeObjectForKey:@"pathStr"];
     }
     
     return self;
@@ -35,6 +37,7 @@
     self.assetURL = nil;
     self.homeworkName = nil;
     self.pizhuArray = nil;
+    self.pathStr = nil;
 }
 
 

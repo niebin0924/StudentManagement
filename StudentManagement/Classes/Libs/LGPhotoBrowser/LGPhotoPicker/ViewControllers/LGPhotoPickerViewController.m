@@ -44,6 +44,8 @@
 - (void) createNavigationController{
     _groupVc = [[LGPhotoPickerGroupViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_groupVc];
+    nav.navigationBar.barTintColor = [UIColor blackColor];
+    nav.navigationBar.tintColor = [UIColor whiteColor];
     
     nav.view.frame = self.view.bounds;
     [self addChildViewController:nav];

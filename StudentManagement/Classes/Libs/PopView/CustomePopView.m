@@ -407,7 +407,12 @@
     PopImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
     NSString *imgName = self.dataArray[indexPath.item];
-    if ([imgName rangeOfString:@"assets-library"].location != NSNotFound) {
+    if ([imgName rangeOfString:@"png"].location != NSNotFound) {
+        // 从沙盒中读取图片
+        NSString *path = [DocumentsPath stringByAppendingPathComponent:imgName];
+        cell.iconImageView.image = [[UIImage alloc] initWithContentsOfFile:path];
+    }
+    else if ([imgName rangeOfString:@"assets-library"].location != NSNotFound) {
         
         [[NBPhotoPickerDatas defaultPicker] getAssetsPhotoWithURLs:[NSURL URLWithString:imgName] callBack:^(UIImage *image) {
             cell.iconImageView.image = image;

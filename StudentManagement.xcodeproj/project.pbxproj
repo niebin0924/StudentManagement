@@ -73,6 +73,7 @@
 		4FE4B40D1E67B39C002A2B9E /* Homework.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4B40C1E67B39C002A2B9E /* Homework.m */; };
 		4FE4DE4A1E8A438D0046F0D2 /* PhotoGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4DE491E8A438D0046F0D2 /* PhotoGroupViewController.m */; };
 		4FE4DE4D1E8A65970046F0D2 /* AssetHeaderCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE4DE4C1E8A65970046F0D2 /* AssetHeaderCollectionReusableView.m */; };
+		4FE6CDCF1E9DFC1800A00AC1 /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6CDCE1E9DFC1800A00AC1 /* CaptureViewController.m */; };
 		4FE6E5181E6515A200AB34A3 /* LxGridViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E5151E6515A200AB34A3 /* LxGridViewFlowLayout.m */; };
 		4FE6E5191E6515A200AB34A3 /* TZTestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E5171E6515A200AB34A3 /* TZTestCell.m */; };
 		4FE6E51C1E65248300AB34A3 /* FEPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE6E51B1E65248300AB34A3 /* FEPlaceHolderTextView.m */; };
@@ -289,6 +290,8 @@
 		4FE4DE491E8A438D0046F0D2 /* PhotoGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGroupViewController.m; sourceTree = "<group>"; };
 		4FE4DE4B1E8A65970046F0D2 /* AssetHeaderCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetHeaderCollectionReusableView.h; sourceTree = "<group>"; };
 		4FE4DE4C1E8A65970046F0D2 /* AssetHeaderCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetHeaderCollectionReusableView.m; sourceTree = "<group>"; };
+		4FE6CDCD1E9DFC1800A00AC1 /* CaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureViewController.h; sourceTree = "<group>"; };
+		4FE6CDCE1E9DFC1800A00AC1 /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		4FE6E5141E6515A200AB34A3 /* LxGridViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxGridViewFlowLayout.h; sourceTree = "<group>"; };
 		4FE6E5151E6515A200AB34A3 /* LxGridViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxGridViewFlowLayout.m; sourceTree = "<group>"; };
 		4FE6E5161E6515A200AB34A3 /* TZTestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZTestCell.h; sourceTree = "<group>"; };
@@ -940,6 +943,8 @@
 				4FECBBD41E60219500A8C675 /* PhotoViewController.m */,
 				4FEA71741E8F7C2000AA5001 /* LocalHomeworkViewController.h */,
 				4FEA71751E8F7C2000AA5001 /* LocalHomeworkViewController.m */,
+				4FE6CDCD1E9DFC1800A00AC1 /* CaptureViewController.h */,
+				4FE6CDCE1E9DFC1800A00AC1 /* CaptureViewController.m */,
 				4FECBBA51E60185600A8C675 /* PiZhuViewController.h */,
 				4FECBBA61E60185600A8C675 /* PiZhuViewController.m */,
 				4FECBBA91E60185600A8C675 /* SubjectFolderViewController.h */,
@@ -1324,6 +1329,7 @@
 				4FE758EC1E8260BE00FF5A61 /* PhotoAssetViewController.m in Sources */,
 				4FE6E5191E6515A200AB34A3 /* TZTestCell.m in Sources */,
 				4FE7BB3A1E8BB8470090B679 /* MAImageViewTool.m in Sources */,
+				4FE6CDCF1E9DFC1800A00AC1 /* CaptureViewController.m in Sources */,
 				4FECBBB01E60185600A8C675 /* InformationViewController.m in Sources */,
 				4FECBBB51E60185600A8C675 /* ZuoyeViewController.m in Sources */,
 				4FECBB8C1E6016FE00A8C675 /* ColorTools.m in Sources */,
